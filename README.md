@@ -6,13 +6,6 @@
 Youtube: (WIP)
 <br/>
 
-**Like this project?**
-
-You might also like my other Minecraft clone written in C using modern OpenGL (GL shader language). It performs better, has better terrain generation and saves state to a sqlite database. See here:
-
-https://github.com/XenonCoder/PyCraft
-<br/>
-
 ## Goals and Vision
 
 I would like to see this project turn into an educational tool. Kids love Minecraft and Python is a great first language.
