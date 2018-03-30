@@ -1,0 +1,14 @@
+<textureatlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet.png">
+
+<subtexture name="bedrock" x="0" y="16" width="16" height="16"></subtexture>
+<subtexture name="cobblestone" x="16" y="32" width="16" height="16"></subtexture>
+<subtexture name="desert_sandstone" x="16" y="0" width="16" height="16"></subtexture>
+<subtexture name="dirt" x="16" y="16" width="16" height="16"></subtexture>
+<subtexture name="glass" x="0" y="32" width="16" height="16"></subtexture>
+<subtexture name="grass" x="0" y="0" width="16" height="16"></subtexture>
+<subtexture name="grass_side" x="32" y="0" width="16" height="16"></subtexture>
+<subtexture name="oak_log" x="32" y="16" width="16" height="16"></subtexture>
+<subtexture name="oak_log_top" x="32" y="32" width="16" height="16"></subtexture>
+<subtexture name="oak_planks" x="0" y="48" width="16" height="16"></subtexture>
+<subtexture name="pine_needles" x="16" y="48" width="16" height="16"></subtexture>
+</textureatlas>
