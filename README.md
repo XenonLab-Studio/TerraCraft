@@ -77,11 +77,13 @@ See the [wiki](https://github.com/fogleman/Minecraft/wiki) for this project to i
 ### Building
 
 - Selecting type of block to create:
-    - 1: brick
-    - 2: grass
-    - 3: sand
-- Mouse left-click: remove block
-- Mouse right-click: create block
+    - 1: Dirt_with_Grass
+    - 2: Sand
+    - 3: Brick
+    - 4: Oak trunk
+    - 5: Leaves
+    - Mouse left-click: remove block
+    - Mouse right-click: create block
 
 ### Quitting
 
