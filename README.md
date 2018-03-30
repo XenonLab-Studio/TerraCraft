@@ -57,12 +57,6 @@ defaults write com.apple.versioner.python Prefer-32-Bit -bool yes
 ```
 
 This assumes you are using the OS X default Python.  Works on Lion 10.7 with the default Python 3.5+, and may work on other versions too.  Please raise an issue if not.
-    
-Or try Pyglet 1.3.1, which supports 64-bit mode:
-
-```shell
-pip install https://pyglet.googlecode.com/files/pyglet-1.2alpha1.tar.gz
-```
 
 See the [wiki](https://github.com/fogleman/Minecraft/wiki) for this project to install Python, and other tips.
 <br/>
