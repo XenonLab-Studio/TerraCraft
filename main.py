@@ -77,6 +77,10 @@ TERMINAL_VELOCITY = 50
 
 PLAYER_HEIGHT = 2
 
+# Fog range
+FOG_START = 20.0
+FOG_END = 60.0
+
 if sys.version_info[0] >= 3:
     xrange = range
 
@@ -910,8 +914,8 @@ def setup_fog():
     glFogi(GL_FOG_MODE, GL_LINEAR)
     # How close and far away fog starts and ends. The closer the start and end,
     # the denser the fog in the fog range.
-    glFogf(GL_FOG_START, 20.0)
-    glFogf(GL_FOG_END, 60.0)
+    glFogf(GL_FOG_START, FOG_START)
+    glFogf(GL_FOG_END, FOG_END)
 
 
 def setup():
