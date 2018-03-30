@@ -1,6 +1,6 @@
 # PyCraft
 
-###### Simple Minecraft-inspired demo written in Python 3 and Pyglet.
+###### Simple 3D sandbox game inspired by Minecraft/Minetest, written in Python 3 and Pyglet.
 <br/>
 
 Youtube: (WIP)
