@@ -48,6 +48,13 @@ from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
 
+# Window settings
+TITLE = 'PyCraft'
+WIDTH = 800
+HEIGHT = 600
+FULLSCREEN = False
+RESIZABLE = False
+
 TICKS_PER_SEC = 60
 
 # Size of sectors used to ease block loading.
@@ -926,7 +933,7 @@ def setup():
 
 
 def main():
-    window = Window(width = 800, height = 600, caption = 'PyCraft', resizable = True, fullscreen = False)
+    window = Window(width = WIDTH, height = HEIGHT, caption = TITLE, resizable = RESIZABLE, fullscreen = FULLSCREEN)
     # Hide the mouse cursor and prevent the mouse from leaving the window.
     window.set_exclusive_mouse(True)
     setup()
