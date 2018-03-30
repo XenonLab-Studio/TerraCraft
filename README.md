@@ -1,5 +1,4 @@
 # PyCraft
----------
 
 ###### Simple Minecraft-inspired demo written in Python 3 and Pyglet.
 <br/>
