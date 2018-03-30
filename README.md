@@ -21,8 +21,8 @@ use / configure to setup a world and run it. Something along these lines...
 ```python
 import pycraft
 
-world = mc.World(...)
-world.set_block(x, y, z, mc.DIRT)
+world = pycraft.World(...)
+world.set_block(x, y, z, pycraft.DIRT)
 pycraft.run(world)
 ```
 
