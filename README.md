@@ -2,14 +2,17 @@
 ---------
 
 ###### Simple Minecraft-inspired demo written in Python 3 and Pyglet.
+<br/>
 
 Youtube: (WIP)
+<br/>
 
 **Like this project?**
 
 You might also like my other Minecraft clone written in C using modern OpenGL (GL shader language). It performs better, has better terrain generation and saves state to a sqlite database. See here:
 
 https://github.com/XenonCoder/PyCraft
+<br/>
 
 ## Goals and Vision
 
@@ -35,6 +38,7 @@ The API could contain functionality for the following:
 
 - Easily configurable parameters like gravity, jump velocity, walking speed, etc.
 - Hooks for terrain generation.
+<br/>
 
 ## How to Run
 
@@ -44,6 +48,7 @@ git clone https://github.com/XenonCoder/PyCraft.git
 cd PyCraft
 python3 main.py
 ```
+<br/>
 
 ### Mac
 
@@ -68,8 +73,10 @@ pip install https://pyglet.googlecode.com/files/pyglet-1.2alpha1.tar.gz
 ```
 
 See the [wiki](https://github.com/fogleman/Minecraft/wiki) for this project to install Python, and other tips.
+<br/>
 
 ## How to Play
+<br/>
 
 ### Moving
 
