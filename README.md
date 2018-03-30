@@ -19,11 +19,11 @@ use / configure to setup a world and run it. Something along these lines...
 
 
 ```python
-import PyCraft
+import pycraft
 
 world = mc.World(...)
 world.set_block(x, y, z, mc.DIRT)
-mc.run(world)
+pycraft.run(world)
 ```
 
 The API could contain functionality for the following:
