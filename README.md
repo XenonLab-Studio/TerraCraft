@@ -19,7 +19,7 @@ use / configure to setup a world and run it. Something along these lines...
 
 
 ```python
-import mc
+import PyCraft
 
 world = mc.World(...)
 world.set_block(x, y, z, mc.DIRT)
