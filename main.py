@@ -118,6 +118,7 @@ def tex_coords(top, bottom, side):
     return result
 
 
+# Textures and blocks
 TEXTURE_PATH = 'img/texture.png'
 
 GRASS = tex_coords((1, 0), (0, 1), (0, 0))
@@ -530,7 +531,7 @@ class Window(pyglet.window.Window):
         self.model = Model()
 
         # The label that is displayed in the top left of the canvas.
-        self.label = pyglet.text.Label('', font_name='Arial', font_size=18,
+        self.label = pyglet.text.Label('', font_name='Arial', font_size=12,
             x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
             color=(0, 0, 0, 255))
 
