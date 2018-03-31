@@ -65,7 +65,7 @@ SECTOR_SIZE = 16
 
 WALKING_SPEED = 5
 FLYING_SPEED = 15
-
+NODE_SELECTOR = 8
 GRAVITY = 20.0
 MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
@@ -247,7 +247,7 @@ class Model(object):
                         self.add_block((x, y, z), t, immediate=False)
                 s -= d  # decrement side lenth so hills taper off
 
-    def hit_test(self, position, vector, max_distance=8):
+    def hit_test(self, position, vector, max_distance = NODE_SELECTOR): # Node selector
         """ Line of sight search from current position. If a block is
         intersected it is returned, along with the block previously in the line
         of sight. If no block is found, return None, None.
