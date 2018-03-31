@@ -1,4 +1,4 @@
-[![Py_Craft.png](https://s14.postimg.org/s3mm19wn5/Py_Craft.png)](https://postimg.org/image/5rot7vxj1/)
+[![Py_Craft.png](https://s14.postimg.org/s3mm19wn5/Py_Craft.png)]
 <br/>
 
 ## Goals and Vision
