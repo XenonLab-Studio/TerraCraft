@@ -28,7 +28,7 @@ The API could contain functionality for the following:
 
 ## How to Run
 
-```shell
+```bash
 sudo pip3 install pyglet
 git clone https://github.com/XenonCoder/PyCraft.git
 cd PyCraft
