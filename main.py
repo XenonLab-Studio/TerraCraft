@@ -64,7 +64,7 @@ TICKS_PER_SEC = 60
 SECTOR_SIZE = 16
 
 WALKING_SPEED = 5
-FLYING_SPEED = 15
+FLYING_SPEED = 10
 NODE_SELECTOR = 8
 GRAVITY = 20.0
 MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
@@ -81,7 +81,7 @@ TERMINAL_VELOCITY = 50
 PLAYER_HEIGHT = 2
 
 # Fog range
-FOG_START = 20.0
+FOG_START = 30.0
 FOG_END = 60.0
 
 if sys.version_info[0] >= 3:
