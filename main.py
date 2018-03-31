@@ -228,14 +228,15 @@ class Model(object):
 
         # generate the hills randomly
         o = n - 10
-        for _ in xrange(120):
+        for _ in xrange(80):
             a = random.randint(-o, o)  # x position of the hill
             b = random.randint(-o, o)  # z position of the hill
             c = -1  # base of the hill
             h = random.randint(1, 6)  # height of the hill
             s = random.randint(4, 8)  # 2 * s is the side length of the hill
             d = 1  # how quickly to taper off the hills
-            t = random.choice([GRASS, SAND, BRICK])
+            # Add here the constants of the blocks used for the generation of the hills
+            t = random.choice([GRASS])
             for y in xrange(c, c + h):
                 for x in xrange(a - s, a + s + 1):
                     for z in xrange(b - s, b + s + 1):
