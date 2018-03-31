@@ -213,7 +213,7 @@ class Model(object):
         """ Initialize the world by placing all the blocks.
 
         """
-        n = 80  # 1/2 width and height of world
+        n = 160  # 1/2 width and height of world
         s = 1  # step size
         y = 0  # initial y height
         for x in xrange(-n, n + 1, s):
@@ -223,26 +223,26 @@ class Model(object):
                 self.add_block((x, y - 3, z), BADSTONE, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
-                    for dy in xrange(-2, 3):
+                    for dy in xrange(-2, 6):
                         self.add_block((x, y + dy, z), BADSTONE, immediate=False)
 
         # generate the hills randomly
-        o = n - 15
-        for _ in xrange(80):
+        o = n - 10
+        for _ in xrange(1000):
             a = random.randint(-o, o)  # x position of the hill
             b = random.randint(-o, o)  # z position of the hill
             c = -1  # base of the hill
-            h = random.randint(1, 6)  # height of the hill
+            h = random.randint(1, 4)  # height of the hill
             s = random.randint(4, 8)  # 2 * s is the side length of the hill
             d = 1  # how quickly to taper off the hills
             # Add here the constants of the blocks used for the generation of the hills
             t = random.choice([GRASS])
             for y in xrange(c, c + h):
-                for x in xrange(a - s, a + s + 1):
-                    for z in xrange(b - s, b + s + 1):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 4:
+                for x in xrange(a - s, a + s + 2):
+                    for z in xrange(b - s, b + s + 2):
+                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
                             continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 3: # flatmap = 6
+                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
                             continue
                         self.add_block((x, y, z), t, immediate=False)
                 s -= d  # decrement side lenth so hills taper off
