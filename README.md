@@ -78,6 +78,12 @@ See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to i
     - 5: Leaves
     - Mouse left-click: remove block
     - Mouse right-click: create block
+    
+### Screenshots
+
+- F12: Save the screenshot in the main folder.
+
+**Warning! By pressing F12, the previous screenshot is automatically overwritten.**
 
 ### Quitting
 
