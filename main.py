@@ -947,7 +947,7 @@ def setup():
 
 
 def main():
-    window = Window(width = WIDTH, height = HEIGHT, caption = TITLE, resizable = RESIZABLE, fullscreen = FULLSCREEN)
+    window = Window(vsync = True, width = WIDTH, height = HEIGHT, caption = TITLE, resizable = RESIZABLE, fullscreen = FULLSCREEN)
     # Hide the mouse cursor and prevent the mouse from leaving the window.
     window.set_exclusive_mouse(True)
     setup()
