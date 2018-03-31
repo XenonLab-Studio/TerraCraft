@@ -81,8 +81,8 @@ TERMINAL_VELOCITY = 50
 PLAYER_HEIGHT = 2
 
 # Fog range
-FOG_START = 30.0
-FOG_END = 60.0
+FOG_START = 40.0
+FOG_END = 80.0
 
 if sys.version_info[0] >= 3:
     xrange = range
@@ -125,15 +125,18 @@ def tex_coords(top, bottom, side):
     return result
 
 
-# Textures and blocks (top, bottom, side)
+# Textures and blocks
 TEXTURE_PATH = 'img/textures.png'
 
+# top, bottom, side
 GRASS = tex_coords((1, 0), (0, 1), (0, 0))
 SAND = tex_coords((1, 1), (1, 1), (1, 1))
 BRICK = tex_coords((2, 0), (2, 0), (2, 0))
 BADSTONE = tex_coords((2, 1), (2, 1), (2, 1))
 TREE = tex_coords((1, 2), (1, 2), (0, 2))
 LEAVES = tex_coords((2, 2), (2, 2), (2, 2))
+SNOW = tex_coords((1, 3), (0, 1), (0, 3))
+WOODEN_PLANKS = tex_coords((2, 3), (2, 3), (2, 3))
 
 FACES = [
     ( 0, 1, 0),
@@ -236,7 +239,7 @@ class Model(object):
             s = random.randint(4, 8)  # 2 * s is the side length of the hill
             d = 1  # how quickly to taper off the hills
             # Add here the constants of the blocks used for the generation of the hills
-            t = random.choice([GRASS])
+            t = random.choice([GRASS, SAND, SNOW])
             for y in xrange(c, c + h):
                 for x in xrange(a - s, a + s + 2):
                     for z in xrange(b - s, b + s + 2):
@@ -527,7 +530,7 @@ class Window(pyglet.window.Window):
         self.dy = 0
 
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [GRASS, SAND, BRICK, TREE, LEAVES]
+        self.inventory = [GRASS, SAND, SNOW, BRICK, TREE, LEAVES, WOODEN_PLANKS]
 
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
