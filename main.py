@@ -223,7 +223,7 @@ class Model(object):
                 self.add_block((x, y - 3, z), BADSTONE, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
-                    for dy in xrange(-2, 6):
+                    for dy in xrange(-2, 20):
                         self.add_block((x, y + dy, z), BADSTONE, immediate=False)
 
         # generate the hills randomly
@@ -240,11 +240,11 @@ class Model(object):
             for y in xrange(c, c + h):
                 for x in xrange(a - s, a + s + 2):
                     for z in xrange(b - s, b + s + 2):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
+                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 4:
                             continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
+                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 3:
                             continue
-                        self.add_block((x, y, z), t, immediate=False)
+                        self.add_block((x, y, z), t, immediate = False)
                 s -= d  # decrement side lenth so hills taper off
 
     def hit_test(self, position, vector, max_distance = NODE_SELECTOR):
@@ -285,7 +285,7 @@ class Model(object):
                 return True
         return False
 
-    def add_block(self, position, texture, immediate=True):
+    def add_block(self, position, texture, immediate = True):
         """ Add a block with the given `texture` and `position` to the world.
 
         Parameters
@@ -308,7 +308,7 @@ class Model(object):
                 self.show_block(position)
             self.check_neighbors(position)
 
-    def remove_block(self, position, immediate=True):
+    def remove_block(self, position, immediate = True):
         """ Remove the block at the given `position`.
 
         Parameters
@@ -345,7 +345,7 @@ class Model(object):
                 if key in self.shown:
                     self.hide_block(key)
 
-    def show_block(self, position, immediate=True):
+    def show_block(self, position, immediate = True):
         """ Show the block at the given `position`. This method assumes the
         block has already been added with add_block()
 
@@ -385,7 +385,7 @@ class Model(object):
             ('v3f/static', vertex_data),
             ('t2f/static', texture_data))
 
-    def hide_block(self, position, immediate=True):
+    def hide_block(self, position, immediate = True):
         """ Hide the block at the given `position`. Hiding does not remove the
         block from the world.
 
