@@ -1,10 +1,4 @@
-# PyCraft
-
-###### Simple 3D sandbox game inspired by Minecraft/Minetest, written in Python 3 and Pyglet.
-<br/>
-
-Youtube: (WIP)
-<br/>
+![PyCraft](/PyCraft.png "PyCraft")
 
 ## Goals and Vision
 
@@ -34,7 +28,7 @@ The API could contain functionality for the following:
 
 ## How to Run
 
-```shell
+```bash
 sudo pip3 install pyglet
 git clone https://github.com/XenonCoder/PyCraft.git
 cd PyCraft
@@ -58,7 +52,7 @@ defaults write com.apple.versioner.python Prefer-32-Bit -bool yes
 
 This assumes you are using the OS X default Python.  Works on Lion 10.7 with the default Python 3.5+, and may work on other versions too.  Please raise an issue if not.
 
-See the [wiki](https://github.com/fogleman/Minecraft/wiki) for this project to install Python, and other tips.
+See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to install Python, and other tips.
 <br/>
 
 ## How to Play
