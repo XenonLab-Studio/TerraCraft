@@ -1,5 +1,6 @@
-![Py_Craft.png](https://s14.postimg.org/s3mm19wn5/Py_Craft.png)
-<br/>
+<p align="center">
+  <img width="490" height="130" src="https://github.com/XenonCoder/PyCraft/blob/master/PyCraft.png/490/130">
+</p>
 
 ## Goals and Vision
 
