@@ -227,7 +227,7 @@ class Model(object):
                         self.add_block((x, y + dy, z), BADSTONE, immediate=False)
 
         # generate the hills randomly
-        o = n - 10
+        o = n - 15
         for _ in xrange(80):
             a = random.randint(-o, o)  # x position of the hill
             b = random.randint(-o, o)  # z position of the hill
@@ -240,14 +240,14 @@ class Model(object):
             for y in xrange(c, c + h):
                 for x in xrange(a - s, a + s + 1):
                     for z in xrange(b - s, b + s + 1):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
+                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 4:
                             continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
+                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 3: # flatmap = 6
                             continue
                         self.add_block((x, y, z), t, immediate=False)
                 s -= d  # decrement side lenth so hills taper off
 
-    def hit_test(self, position, vector, max_distance = NODE_SELECTOR): # Node selector
+    def hit_test(self, position, vector, max_distance = NODE_SELECTOR):
         """ Line of sight search from current position. If a block is
         intersected it is returned, along with the block previously in the line
         of sight. If no block is found, return None, None.
