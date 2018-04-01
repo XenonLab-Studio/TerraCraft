@@ -223,7 +223,7 @@ class Model(object):
         if self.saveModule.hasSaveGame() == True:
             self.saveModule.loadWorld(self)
         else:
-            n = 80  # 1/2 width and height of world
+            n = 60  # 1/2 width and height of world
             s = 1  # step size
             y = 0  # initial y height
             for x in xrange(-n, n + 1, s):
