@@ -224,7 +224,7 @@ class Model(object):
         if self.saveModule.hasSaveGame() == True:
             self.saveModule.loadWorld(self)
         else:
-            n = 60  # 1/2 width and height of world
+            n = 80  # 1/2 width and height of world
             s = 1  # step size
             y = 0  # initial y height
             for x in xrange(-n, n + 1, s):
@@ -559,6 +559,13 @@ class Window(pyglet.window.Window):
             x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
             color=(0, 0, 0, 255))
 
+        # Boolean whether to display loading screen
+        self.is_initializing = True
+        # Loading screen label displayed in center of canvas
+        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
+            x=self.width // 2, y=self.height // 2, anchor_x='center', anchor_y='center',
+            color=(0, 0, 0, 255))
+
         # This call schedules the `update()` method to be called
         # TICKS_PER_SEC. This is the main game event loop.
         pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
@@ -621,6 +628,10 @@ class Window(pyglet.window.Window):
                 dy = 0.0
                 dx = math.cos(x_angle)
                 dz = math.sin(x_angle)
+        elif self.flying and not self.dy == 0:
+            dx = 0.0
+            dy = self.dy
+            dz = 0.0
         else:
             dy = 0.0
             dx = 0.0
@@ -796,7 +807,9 @@ class Window(pyglet.window.Window):
         elif symbol == key.D:
             self.strafe[1] += 1
         elif symbol == key.SPACE:
-            if self.dy == 0:
+            if self.flying:
+                self.dy = 0.5 * WALKING_SPEED
+            elif self.dy == 0:
                 self.dy = JUMP_SPEED
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
@@ -834,6 +847,8 @@ class Window(pyglet.window.Window):
             self.strafe[1] -= 1
         elif symbol == key.LSHIFT:
             self.running = False
+        elif symbol == key.SPACE:
+            self.dy = 0
 
     def on_resize(self, width, height):
         """ Called when the window is resized to a new `width` and `height`.
@@ -886,13 +901,19 @@ class Window(pyglet.window.Window):
 
         """
         self.clear()
-        self.set_3d()
-        glColor3d(1, 1, 1)
-        self.model.batch.draw()
-        self.draw_focused_block()
+        if not self.is_initializing:
+            self.set_3d()
+            glColor3d(1, 1, 1)
+            self.model.batch.draw()
+            self.draw_focused_block()
+            self.set_2d()
+            self.draw_reticle()
         self.set_2d()
         self.draw_label()
-        self.draw_reticle()
+        # Delete loading label after it's used
+        if self.is_initializing:
+            self.loading_label.delete()
+            self.is_initializing = False
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
@@ -913,18 +934,24 @@ class Window(pyglet.window.Window):
         """ Draw the label in the top left of the screen.
 
         """
-        x, y, z = self.position
-        self.label.text = 'FPS = ' + '[%02d] - COORDINATES = [%.2f, %.2f, %.2f] %d / %d' % (
-            pyglet.clock.get_fps(), x, y, z,
-            len(self.model._shown), len(self.model.world))
-        self.label.draw()
+        if not self.is_initializing:
+            x, y, z = self.position
+            self.label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
+                pyglet.clock.get_fps(), x, y, z,
+                len(self.model._shown), len(self.model.world))
+            self.label.draw()
+        else:
+            # Only draw the loading screen during the first draw loop
+            self.loading_label.text = 'Loading...'
+            self.loading_label.draw()
 
     def draw_reticle(self):
         """ Draw the crosshairs in the center of the screen.
 
         """
-        glColor3d(0, 0, 0)
-        self.reticle.draw(GL_LINES)
+        if not self.is_initializing:
+            glColor3d(0, 0, 0)
+            self.reticle.draw(GL_LINES)
 
 
 def setup_fog():

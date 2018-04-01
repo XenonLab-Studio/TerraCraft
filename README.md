@@ -65,7 +65,7 @@ See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to i
 - A: strafe left
 - D: strafe right
 - Mouse: look around
-- Space: jump
+- Space: jump + vertical flying
 - Left Shift: run
 - Tab: toggle flying mode
 
