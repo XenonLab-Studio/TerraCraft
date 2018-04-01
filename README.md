@@ -66,6 +66,7 @@ See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to i
 - D: strafe right
 - Mouse: look around
 - Space: jump
+- Left Shift: run
 - Tab: toggle flying mode
 
 ### Building
