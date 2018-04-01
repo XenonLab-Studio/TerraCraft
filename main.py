@@ -508,6 +508,12 @@ class Window(pyglet.window.Window):
         # When flying gravity has no effect and speed is increased.
         self.flying = False
 
+        # toggles all gui elements including the reticle and block highlighing
+        self.toggleGui = True
+
+        # toggles the text in the upper left corner
+        self.toggleLabel = True
+
         # Determine if player is running. If false, then player is walking.
         self.running = False
 
@@ -824,6 +830,10 @@ class Window(pyglet.window.Window):
             self.block = self.inventory[index]
         elif symbol == key.F12:
             self.screenshot = pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
+        elif symbol == key.F1:
+            self.toggleGui = not self.toggleGui
+        elif symbol == key.F2:
+            self.toggleLabel = not self.toggleLabel
         elif symbol == key.F5:
             self.model.saveModule.saveWorld(self.model)
 
@@ -907,15 +917,14 @@ class Window(pyglet.window.Window):
             self.set_3d()
             glColor3d(1, 1, 1)
             self.model.batch.draw()
-            self.draw_focused_block()
-            self.set_2d()
-            self.draw_reticle()
+            if self.toggleGui:
+                self.draw_focused_block()
+                self.set_2d()
+                if self.toggleLabel:
+                    self.draw_label()
+                self.draw_reticle()
         self.set_2d()
-        self.draw_label()
-        # Delete loading label after it's used
-        if self.is_initializing:
-            self.loading_label.delete()
-            self.is_initializing = False
+        self.is_initializing = False
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the

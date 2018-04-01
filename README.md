@@ -80,8 +80,10 @@ See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to i
     - Mouse left-click: remove block
     - Mouse right-click: create block
     
-### Screenshots
+### Functions
 
+- F1: toggles reticle, block highlight, and fps counter.
+- F2: toggles just the fps counter.
 - F12: Save the screenshot in the main folder.
 
 **Warning! By pressing F12, the previous screenshot is automatically overwritten.**
