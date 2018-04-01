@@ -50,8 +50,6 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
-import saveModule
-
 # Window settings
 TITLE = 'PyCraft'
 WIDTH = 800
@@ -212,30 +210,24 @@ class Model(object):
         # _show_block() and _hide_block() calls
         self.queue = deque()
 
-        # a module to save and load the world
-        self.saveModule = saveModule.saveModule()
-
         self._initialize()
 
     def _initialize(self):
         """ Initialize the world by placing all the blocks.
         """
 
-        if self.saveModule.hasSaveGame() == True:
-            self.saveModule.loadWorld(self)
-        else:
-            n = 80  # 1/2 width and height of world
-            s = 1  # step size
-            y = 0  # initial y height
-            for x in xrange(-n, n + 1, s):
-                for z in xrange(-n, n + 1, s):
-                    # create a layer badstone an grass everywhere.
-                    self.add_block((x, y - 2, z), GRASS, immediate=False)
-                    self.add_block((x, y - 3, z), BADSTONE, immediate=False)
-                    if x in (-n, n) or z in (-n, n):
-                        # create outer walls.
-                        for dy in xrange(-2, 20):
-                            self.add_block((x, y + dy, z), BADSTONE, immediate=False)
+        n = 80  # 1/2 width and height of world
+        s = 1  # step size
+        y = 0  # initial y height
+        for x in xrange(-n, n + 1, s):
+            for z in xrange(-n, n + 1, s):
+                # create a layer badstone an grass everywhere.
+                self.add_block((x, y - 2, z), GRASS, immediate=False)
+                self.add_block((x, y - 3, z), BADSTONE, immediate=False)
+                if x in (-n, n) or z in (-n, n):
+                    # create outer walls.
+                    for dy in xrange(-2, 20):
+                        self.add_block((x, y + dy, z), BADSTONE, immediate=False)
 
         # generate the hills randomly
         o = n - 10
@@ -834,8 +826,7 @@ class Window(pyglet.window.Window):
             self.toggleGui = not self.toggleGui
         elif symbol == key.F2:
             self.toggleLabel = not self.toggleLabel
-        elif symbol == key.F5:
-            self.model.saveModule.saveWorld(self.model)
+            
 
     def on_key_release(self, symbol, modifiers):
         """ Called when the player releases a key. See pyglet docs for key
