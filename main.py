@@ -82,7 +82,7 @@ PLAYER_HEIGHT = 2
 
 # Fog range
 FOG_START = 40.0
-FOG_END = 80.0
+FOG_END = 60.0
 
 if sys.version_info[0] >= 3:
     xrange = range
