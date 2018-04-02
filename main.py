@@ -278,7 +278,7 @@ class Model(object):
         return None, None
 
     def exposed(self, position):
-        """ Returns False is given `position` is surrounded on all 6 sides by
+        """ Returns False if given `position` is surrounded on all 6 sides by
         blocks, True otherwise.
 
         """
