@@ -1,4 +1,6 @@
-<p align="center"><img src="/TerraCraft.png" width="450" >
+<p align="center"><img src="/TerraCraft.png" width="600" >
+<br>
+<br>
 
 ## Goals and Vision
 
