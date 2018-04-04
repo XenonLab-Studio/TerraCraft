@@ -60,12 +60,16 @@ HEIGHT = 600
 VSYNC = True
 FULLSCREEN = False
 RESIZABLE = False
+TOGGLE_GUI = True
+TOGGLE_LABEL = True
 
 # FPS
 TICKS_PER_SEC = 60
 
 # Player
 PLAYER_HEIGHT = 2
+RUNNING = False
+FLYING = False
 
 # Fog range
 FOG_START = 20.0
@@ -514,10 +518,16 @@ class Window(pyglet.window.Window):
         self.exclusive = False
 
         # When flying gravity has no effect and speed is increased.
-        self.flying = False
+        self.flying = FLYING
 
         # Determine if player is running. If false, then player is walking.
-        self.running = False
+        self.running = RUNNING
+
+        # Toggles all gui elements including the reticle and block highlighing
+        self.toggleGui = TOGGLE_GUI
+
+        # Toggles the text in the upper left corner
+        self.toggleLabel = TOGGLE_LABEL
 
         # Strafing is moving lateral to the direction you are facing,
         # e.g. moving to the left or right while continuing to face forward.
@@ -812,6 +822,10 @@ class Window(pyglet.window.Window):
             self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
             self.flying = not self.flying
+        elif symbol == key.F1:
+            self.toggleGui = not self.toggleGui
+        elif symbol == key.F2:
+            self.toggleLabel = not self.toggleLabel
         elif symbol == key.F12:
             self.screenshot = pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
         elif symbol in self.num_keys:
@@ -895,10 +909,12 @@ class Window(pyglet.window.Window):
         self.set_3d()
         glColor3d(1, 1, 1)
         self.model.batch.draw()
-        self.draw_focused_block()
-        self.set_2d()
-        self.draw_label()
-        self.draw_reticle()
+        if self.toggleGui:
+            self.draw_focused_block()
+            self.set_2d()
+            if self.toggleLabel:
+                self.draw_label()
+            self.draw_reticle()
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
