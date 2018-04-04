@@ -95,7 +95,9 @@ See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to i
 ## License
 
 Copyright (C) 2013 Michael Fogleman<br>
-Copyright (C) 2018 Stefano Peris <xenon77.dev@gmail.com>
+Copyright (C) 2018 Stefano Peris<br>
+
+eMail: <xenon77.dev@gmail.com><br>
 
 Github repository: <https://github.com/XenonCoder/PyCraft><br>
 
