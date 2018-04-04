@@ -84,7 +84,7 @@ SECTOR_SIZE = 16
 # Speed
 WALKING_SPEED = 3
 RUNNING_SPEED = 6
-FLYING_SPEED = 15
+FLYING_SPEED = 10
 
 # Node selector (block selector)
 NODE_SELECTOR = 8
@@ -642,6 +642,10 @@ class Window(pyglet.window.Window):
                 dy = 0.0
                 dx = math.cos(x_angle)
                 dz = math.sin(x_angle)
+        elif self.flying and not self.dy == 0:
+            dx = 0.0
+            dy = self.dy
+            dz = 0.0
         else:
             dy = 0.0
             dx = 0.0
@@ -818,7 +822,7 @@ class Window(pyglet.window.Window):
         elif symbol == key.D:
             self.strafe[1] += 1
         elif symbol == key.SPACE:
-            if self.dy == 0:
+            if self.dy == 0 or self.flying:
                 self.dy = JUMP_SPEED
         elif symbol == key.LSHIFT:
             self.running = True
@@ -856,6 +860,8 @@ class Window(pyglet.window.Window):
             self.strafe[1] += 1
         elif symbol == key.D:
             self.strafe[1] -= 1
+        elif symbol == key.SPACE:
+            self.dy = 0
         elif symbol == key.LSHIFT:
             self.running = False
 
