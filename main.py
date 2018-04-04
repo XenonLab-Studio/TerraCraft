@@ -129,6 +129,7 @@ def tex_coords(top, bottom, side):
 TEXTURE_PATH = 'img/textures.png'
 
 # top, bottom, side
+DIRT = tex_coords((0, 1), (0, 1), (0, 1))
 GRASS = tex_coords((1, 0), (0, 1), (0, 0))
 SAND = tex_coords((1, 1), (1, 1), (1, 1))
 BRICK = tex_coords((2, 0), (2, 0), (2, 0))
@@ -231,7 +232,7 @@ class Model(object):
 
         # generate the hills randomly
         o = n - 10
-        for _ in xrange(1000):
+        for _ in xrange(150):
             a = random.randint(-o, o)  # x position of the hill
             b = random.randint(-o, o)  # z position of the hill
             c = -1  # base of the hill
@@ -239,13 +240,13 @@ class Model(object):
             s = random.randint(4, 8)  # 2 * s is the side length of the hill
             d = 1  # how quickly to taper off the hills
             # Add here the constants of the blocks used for the generation of the hills
-            t = random.choice([GRASS, SAND, SNOW])
+            t = random.choice([DIRT, GRASS, SNOW, SAND,])
             for y in xrange(c, c + h):
                 for x in xrange(a - s, a + s + 2):
                     for z in xrange(b - s, b + s + 2):
                         if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 4:
                             continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 3:
+                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
                             continue
                         self.add_block((x, y, z), t, immediate = False)
                 s -= d  # decrement side lenth so hills taper off
@@ -539,7 +540,7 @@ class Window(pyglet.window.Window):
         self.dy = 0
 
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [GRASS, SAND, SNOW, BRICK, TREE, LEAVES, WOODEN_PLANKS]
+        self.inventory = [DIRT, GRASS, SAND, SNOW, BRICK, TREE, LEAVES, WOODEN_PLANKS]
 
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
