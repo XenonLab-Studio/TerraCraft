@@ -62,7 +62,7 @@ FULLSCREEN = False
 RESIZABLE = False
 INFO_LABEL_FONTSIZE = 12
 TOGGLE_GUI = True
-TOGGLE_LABEL = True
+TOGGLE_INFO_LABEL = True
 
 # FPS
 TICKS_PER_SEC = 60
@@ -528,7 +528,7 @@ class Window(pyglet.window.Window):
         self.toggleGui = TOGGLE_GUI
 
         # Toggles the text in the upper left corner
-        self.toggleLabel = TOGGLE_LABEL
+        self.toggleLabel = TOGGLE_INFO_LABEL
 
         # Strafing is moving lateral to the direction you are facing,
         # e.g. moving to the left or right while continuing to face forward.
