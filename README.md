@@ -1,4 +1,4 @@
-<p align="center"><img src="/PyCraft.png" width="450" >
+<p align="center"><img src="/TerraCraft.png" width="450" >
 
 ## Goals and Vision
 
@@ -13,11 +13,11 @@ use / configure to setup a world and run it. Something along these lines...
 
 
 ```python
-import pycraft
+import terracraft
 
-world = pycraft.World(...)
-world.set_block(x, y, z, pycraft.DIRT)
-pycraft.run(world)
+world = terracraft.World(...)
+world.set_block(x, y, z, terracraft.DIRT)
+terracraft.run(world)
 ```
 
 The API could contain functionality for the following:
@@ -30,8 +30,8 @@ The API could contain functionality for the following:
 
 ```bash
 sudo pip3 install pyglet
-git clone https://github.com/XenonCoder/PyCraft.git
-cd PyCraft
+git clone https://github.com/XenonCoder/terracraft.git
+cd terracraft
 python3 main.py
 ```
 <br/>
@@ -52,7 +52,7 @@ defaults write com.apple.versioner.python Prefer-32-Bit -bool yes
 
 This assumes you are using the OS X default Python.  Works on Lion 10.7 with the default Python 3.5+, and may work on other versions too.  Please raise an issue if not.
 
-See the [wiki](https://github.com/XenonCoder/PyCraft/wiki) for this project to install Python, and other tips.
+See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project to install Python, and other tips.
 <br/>
 
 ## How to Play
@@ -99,7 +99,7 @@ Copyright (C) 2018 Stefano Peris<br>
 
 eMail: <xenon77.dev@gmail.com><br>
 
-Github repository: <https://github.com/XenonCoder/PyCraft><br>
+Github repository: <https://github.com/XenonCoder/terracraft><br>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation
