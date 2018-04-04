@@ -60,6 +60,7 @@ HEIGHT = 600
 VSYNC = True
 FULLSCREEN = False
 RESIZABLE = False
+INFO_LABEL_FONTSIZE = 12
 TOGGLE_GUI = True
 TOGGLE_LABEL = True
 
@@ -573,9 +574,9 @@ class Window(pyglet.window.Window):
         self.model = Model()
 
         # The label that is displayed in the top left of the canvas.
-        self.label = pyglet.text.Label('', font_name='Arial', font_size=18,
-            x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
-            color=(0, 0, 0, 255))
+        self.info_label = pyglet.text.Label('', font_name = 'Arial', font_size = INFO_LABEL_FONTSIZE,
+            x=10, y = self.height - 10, anchor_x = 'left', anchor_y = 'top',
+            color = (0, 0, 0, 255))
 
         # This call schedules the `update()` method to be called
         # TICKS_PER_SEC. This is the main game event loop.
@@ -860,7 +861,7 @@ class Window(pyglet.window.Window):
 
         """
         # label
-        self.label.y = height - 10
+        self.info_label.y = height - 10
         # reticle
         if self.reticle:
             self.reticle.delete()
@@ -936,10 +937,10 @@ class Window(pyglet.window.Window):
 
         """
         x, y, z = self.position
-        self.label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
+        self.info_label.text = 'FPS = [%02d] : COORDS = [%.2f, %.2f, %.2f] : %d / %d' % (
             pyglet.clock.get_fps(), x, y, z,
             len(self.model._shown), len(self.model.world))
-        self.label.draw()
+        self.info_label.draw()
 
     def draw_reticle(self):
         """ Draw the crosshairs in the center of the screen.
