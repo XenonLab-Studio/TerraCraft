@@ -822,7 +822,10 @@ class Window(pyglet.window.Window):
         elif symbol == key.D:
             self.strafe[1] += 1
         elif symbol == key.SPACE:
-            if self.dy == 0 or self.flying:
+            if self.flying:
+                # Reduces vertical flying speed
+                self.dy = 0.1 * JUMP_SPEED
+            elif self.dy == 0:
                 self.dy = JUMP_SPEED
         elif symbol == key.LSHIFT:
             self.running = True
