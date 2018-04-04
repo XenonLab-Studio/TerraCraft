@@ -247,7 +247,7 @@ class Model(object):
         y = 0  # initial y height
         for x in xrange(-n, n + 1, s):
             for z in xrange(-n, n + 1, s):
-                # create a layer BADSTONE an grass everywhere.
+                # create a layer of badstone and grass everywhere.
                 self.add_block((x, y - 2, z), GRASS, immediate=False)
                 self.add_block((x, y - 3, z), BADSTONE, immediate=False)
                 if x in (-n, n) or z in (-n, n):
@@ -303,7 +303,7 @@ class Model(object):
         return None, None
 
     def exposed(self, position):
-        """ Returns False is given `position` is surrounded on all 6 sides by
+        """ Returns False if given `position` is surrounded on all 6 sides by
         blocks, True otherwise.
 
         """
