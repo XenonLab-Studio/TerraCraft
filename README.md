@@ -1,4 +1,4 @@
-<p align="center"><img src="/TerraCraft.png" width="600" >
+<p align="center"><img src="/Terracraft.png" width="600" >
 <br>
 <br>
 
