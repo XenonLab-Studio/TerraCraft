@@ -45,6 +45,8 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
+import saveModule
+
 
 ############################## ENGINE SETTINGS ##############################
 
@@ -231,44 +233,51 @@ class Model(object):
         # _show_block() and _hide_block() calls
         self.queue = deque()
 
+        # A module to save and load the world
+        self.saveModule = saveModule.saveModule()
+
         self._initialize()
 
     def _initialize(self):
         """ Initialize the world by placing all the blocks.
 
         """
-        n = 80  # 1/2 width and height of world
-        s = 1  # step size
-        y = 0  # initial y height
-        for x in xrange(-n, n + 1, s):
-            for z in xrange(-n, n + 1, s):
-                # create a layer of badstone and grass everywhere.
-                self.add_block((x, y - 2, z), GRASS, immediate=False)
-                self.add_block((x, y - 3, z), BADSTONE, immediate=False)
-                if x in (-n, n) or z in (-n, n):
-                    # create outer walls.
-                    for dy in xrange(-2, 3):
-                        self.add_block((x, y + dy, z), BADSTONE, immediate=False)
 
-        # generate the hills randomly
-        o = n - 10
-        for _ in xrange(120):
-            a = random.randint(-o, o)  # x position of the hill
-            b = random.randint(-o, o)  # z position of the hill
-            c = -1  # base of the hill
-            h = random.randint(1, 6)  # height of the hill
-            s = random.randint(4, 8)  # 2 * s is the side length of the hill
-            d = 1  # how quickly to taper off the hills
-            t = random.choice([GRASS, SAND, BRICK])
-            for y in xrange(c, c + h):
-                for x in xrange(a - s, a + s + 1):
-                    for z in xrange(b - s, b + s + 1):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
-                            continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
-                            continue
-                        self.add_block((x, y, z), t, immediate=False)
-                s -= d  # decrement side lenth so hills taper off
+        if self.saveModule.hasSaveGame() == True:
+            self.saveModule.loadWorld(self)
+        else:
+            n = 80  # 1/2 width and height of world
+            s = 1  # step size
+            y = 0  # initial y height
+            for x in xrange(-n, n + 1, s):
+                for z in xrange(-n, n + 1, s):
+                    # create a layer stone an grass everywhere.
+                    self.add_block((x, y - 2, z), GRASS, immediate=False)
+                    self.add_block((x, y - 3, z), BADSTONE, immediate=False)
+                    if x in (-n, n) or z in (-n, n):
+                        # create outer walls.
+                        for dy in xrange(-2, 3):
+                            self.add_block((x, y + dy, z), BADSTONE, immediate=False)
+
+            # generate the hills randomly
+            o = n - 10
+            for _ in xrange(120):
+                a = random.randint(-o, o)  # x position of the hill
+                b = random.randint(-o, o)  # z position of the hill
+                c = -1  # base of the hill
+                h = random.randint(1, 6)  # height of the hill
+                s = random.randint(4, 8)  # 2 * s is the side length of the hill
+                d = 1  # how quickly to taper off the hills
+                t = random.choice([GRASS, SNOW, SAND])
+                for y in xrange(c, c + h):
+                    for x in xrange(a - s, a + s + 1):
+                        for z in xrange(b - s, b + s + 1):
+                            if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
+                                continue
+                            if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
+                                continue
+                            self.add_block((x, y, z), t, immediate=False)
+                    s -= d  # decrement side lenth so hills taper off
 
     def hit_test(self, position, vector, max_distance = NODE_SELECTOR):
         """ Line of sight search from current position. If a block is
@@ -834,6 +843,8 @@ class Window(pyglet.window.Window):
             self.toggleGui = not self.toggleGui
         elif symbol == key.F2:
             self.toggleLabel = not self.toggleLabel
+        elif symbol == key.F5:
+            self.model.saveModule.saveWorld(self.model)
         elif symbol == key.F12:
             self.screenshot = pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
         elif symbol in self.num_keys:
