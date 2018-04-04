@@ -2,24 +2,22 @@
 # -*- coding: utf-8 -*-
 
 '''
- _______              ______                       ______    __
-/       \            /      \                     /      \  /  |
-$$$$$$$  | __    __ /$$$$$$  |  ______   ______  /$$$$$$  |_$$ |
-$$ |__$$ |/  |  /  |$$ |  $$/  /      \ /      \ $$ |_ $$// $$   |
-$$    $$/ $$ |  $$ |$$ |      /$$$$$$  |$$$$$$  |$$   |   $$$$$$/
-$$$$$$$/  $$ |  $$ |$$ |   __ $$ |  $$/ /    $$ |$$$$/      $$ |
-$$ |      $$ \__$$ |$$ \__/  |$$ |     /$$$$$$$ |$$ |       $$ |/  |
-$$ |      $$    $$ |$$    $$/ $$ |     $$    $$ |$$ |       $$  $$/
-$$/        $$$$$$$ | $$$$$$/  $$/       $$$$$$$/ $$/         $$$$/
-          /  \__$$ |
-          $$    $$/
-           $$$$$$/
+
+ ________                                        ______                       ______     __
+|        \                                      /      \                     /      \   |  \ 
+ \$$$$$$$$______    ______    ______   ______  |  $$$$$$\  ______   ______  |  $$$$$$\ _| $$_
+   | $$  /      \  /      \  /      \ |      \ | $$   \$$ /      \ |      \ | $$_  \$$|   $$ \ 
+   | $$ |  $$$$$$\|  $$$$$$\|  $$$$$$\ \$$$$$$\| $$      |  $$$$$$\ \$$$$$$\| $$ \     \$$$$$$
+   | $$ | $$    $$| $$   \$$| $$   \$$/      $$| $$   __ | $$   \$$/      $$| $$$$      | $$ __
+   | $$ | $$$$$$$$| $$      | $$     |  $$$$$$$| $$__/  \| $$     |  $$$$$$$| $$        | $$|  \ 
+   | $$  \$$     \| $$      | $$      \$$    $$ \$$    $$| $$      \$$    $$| $$         \$$  $$
+    \$$   \$$$$$$$ \$$       \$$       \$$$$$$$  \$$$$$$  \$$       \$$$$$$$ \$$          \$$$$
 
 
 Copyright (C) 2013 Michael Fogleman
 Copyright (C) 2018 Stefano Peris <xenon77.dev@gmail.com>
 
-Github repository: <https://github.com/XenonCoder/PyCraft>
+Github repository: <https://github.com/XenonCoder/Terracraft>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -52,7 +50,7 @@ from pyglet.window import key, mouse
 ############################## ENGINE SETTINGS ##############################
 
 # Window settings
-TITLE = 'PyCraft'
+TITLE = 'Terracraft'
 WIDTH = 800
 HEIGHT = 600
 VSYNC = True
