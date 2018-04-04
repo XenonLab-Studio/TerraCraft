@@ -806,6 +806,8 @@ class Window(pyglet.window.Window):
             self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
             self.flying = not self.flying
+        elif symbol == key.F12:
+            self.screenshot = pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
         elif symbol in self.num_keys:
             index = (symbol - self.num_keys[0]) % len(self.inventory)
             self.block = self.inventory[index]
