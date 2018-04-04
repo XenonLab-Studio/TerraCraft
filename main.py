@@ -37,8 +37,6 @@ DEALINGS IN THE SOFTWARE.
 '''
 
 
-from __future__ import division
-
 import sys
 import math
 import random
