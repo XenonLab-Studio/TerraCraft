@@ -72,6 +72,10 @@ PLAYER_HEIGHT = 2
 RUNNING = False
 FLYING = False
 
+# Look speed
+LOOK_SPEED_X = 0.15
+LOOK_SPEED_Y = 0.15
+
 # Fog range
 FOG_START = 20.0
 FOG_END = 60.0
@@ -524,10 +528,10 @@ class Window(pyglet.window.Window):
         # Determine if player is running. If false, then player is walking.
         self.running = RUNNING
 
-        # Toggles all gui elements including the reticle and block highlighing
+        # Wether or not all gui elements are drawn.
         self.toggleGui = TOGGLE_GUI
 
-        # Toggles the text in the upper left corner
+        # Wether or not the fps counter and player coordinates are drawn.
         self.toggleLabel = TOGGLE_INFO_LABEL
 
         # Strafing is moving lateral to the direction you are facing,
@@ -788,9 +792,8 @@ class Window(pyglet.window.Window):
 
         """
         if self.exclusive:
-            m = 0.15
             x, y = self.rotation
-            x, y = x + dx * m, y + dy * m
+            x, y = x + dx * LOOK_SPEED_X, y + dy * LOOK_SPEED_Y
             y = max(-90, min(90, y))
             self.rotation = (x, y)
 
