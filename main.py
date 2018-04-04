@@ -50,15 +50,41 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
+
+############################## ENGINE SETTINGS ##############################
+
+# Window settings
+TITLE = 'PyCraft'
+WIDTH = 800
+HEIGHT = 600
+VSYNC = True
+FULLSCREEN = False
+RESIZABLE = False
+
+# FPS
 TICKS_PER_SEC = 60
+
+# Player
+PLAYER_HEIGHT = 2
+
+# Fog range
+FOG_START = 20.0
+FOG_END = 60.0
 
 # Size of sectors used to ease block loading.
 SECTOR_SIZE = 16
 
+# Speed
 WALKING_SPEED = 5
 FLYING_SPEED = 15
 
+# Node selector (block selector)
+NODE_SELECTOR = 8
+
+# Gravity
 GRAVITY = 20.0
+
+# Jump
 MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
@@ -67,17 +93,19 @@ MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
 #    t = - v_0 / a
 # Use t and the desired MAX_JUMP_HEIGHT to solve for v_0 (jump speed) in
 #    s = s_0 + v_0 * t + (a * t^2) / 2
+
 JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
+
+# Terminal velocity
 TERMINAL_VELOCITY = 50
 
-PLAYER_HEIGHT = 2
+############################## END SETTINGS ##############################
 
 if sys.version_info[0] >= 3:
     xrange = range
 
 def cube_vertices(x, y, z, n):
     """ Return the vertices of the cube at position x, y, z with size 2*n.
-
     """
     return [
         x-n,y+n,z-n, x-n,y+n,z+n, x+n,y+n,z+n, x+n,y+n,z-n,  # top
@@ -237,7 +265,7 @@ class Model(object):
                         self.add_block((x, y, z), t, immediate=False)
                 s -= d  # decrement side lenth so hills taper off
 
-    def hit_test(self, position, vector, max_distance=8):
+    def hit_test(self, position, vector, max_distance = NODE_SELECTOR):
         """ Line of sight search from current position. If a block is
         intersected it is returned, along with the block previously in the line
         of sight. If no block is found, return None, None.
@@ -910,8 +938,8 @@ def setup_fog():
     glFogi(GL_FOG_MODE, GL_LINEAR)
     # How close and far away fog starts and ends. The closer the start and end,
     # the denser the fog in the fog range.
-    glFogf(GL_FOG_START, 20.0)
-    glFogf(GL_FOG_END, 60.0)
+    glFogf(GL_FOG_START, FOG_START)
+    glFogf(GL_FOG_END, FOG_END)
 
 
 def setup():
@@ -934,7 +962,7 @@ def setup():
 
 
 def main():
-    window = Window(width=800, height=600, caption='PyCraft', resizable=True)
+    window = Window(width = WIDTH, height = HEIGHT, caption = TITLE, resizable = RESIZABLE, fullscreen = FULLSCREEN, vsync = VSYNC)
     # Hide the mouse cursor and prevent the mouse from leaving the window.
     window.set_exclusive_mouse(True)
     setup()
