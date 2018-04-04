@@ -1,42 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
-'''
- _______              ______                       ______    __
-/       \            /      \                     /      \  /  |
-$$$$$$$  | __    __ /$$$$$$  |  ______   ______  /$$$$$$  |_$$ |
-$$ |__$$ |/  |  /  |$$ |  $$/  /      \ /      \ $$ |_ $$// $$   |
-$$    $$/ $$ |  $$ |$$ |      /$$$$$$  |$$$$$$  |$$   |   $$$$$$/
-$$$$$$$/  $$ |  $$ |$$ |   __ $$ |  $$/ /    $$ |$$$$/      $$ |
-$$ |      $$ \__$$ |$$ \__/  |$$ |     /$$$$$$$ |$$ |       $$ |/  |
-$$ |      $$    $$ |$$    $$/ $$ |     $$    $$ |$$ |       $$  $$/
-$$/        $$$$$$$ | $$$$$$/  $$/       $$$$$$$/ $$/         $$$$/
-          /  \__$$ |
-          $$    $$/
-           $$$$$$/
-
-
-Copyright (C) 2013 Michael Fogleman
-Copyright (C) 2018 Stefano Peris <xenon77.dev@gmail.com>
-
-Github repository: <https://github.com/XenonCoder/PyCraft>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions
-of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-DEALINGS IN THE SOFTWARE.
-'''
-
-
 from __future__ import division
 
 import sys
@@ -50,22 +11,14 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
-# Window settings
-TITLE = 'PyCraft'
-WIDTH = 800
-HEIGHT = 600
-FULLSCREEN = False
-RESIZABLE = False
-
 TICKS_PER_SEC = 60
 
 # Size of sectors used to ease block loading.
 SECTOR_SIZE = 16
 
-WALKING_SPEED = 3
-RUNNING_SPEED = 6
-FLYING_SPEED = 10
-NODE_SELECTOR = 8
+WALKING_SPEED = 5
+FLYING_SPEED = 15
+
 GRAVITY = 20.0
 MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
@@ -79,10 +32,6 @@ JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
 TERMINAL_VELOCITY = 50
 
 PLAYER_HEIGHT = 2
-
-# Fog range
-FOG_START = 40.0
-FOG_END = 60.0
 
 if sys.version_info[0] >= 3:
     xrange = range
@@ -125,19 +74,12 @@ def tex_coords(top, bottom, side):
     return result
 
 
-# Textures and blocks
-TEXTURE_PATH = 'img/textures.png'
+TEXTURE_PATH = 'texture.png'
 
-# top, bottom, side
-DIRT = tex_coords((0, 1), (0, 1), (0, 1))
 GRASS = tex_coords((1, 0), (0, 1), (0, 0))
 SAND = tex_coords((1, 1), (1, 1), (1, 1))
 BRICK = tex_coords((2, 0), (2, 0), (2, 0))
-BADSTONE = tex_coords((2, 1), (2, 1), (2, 1))
-TREE = tex_coords((1, 2), (1, 2), (0, 2))
-LEAVES = tex_coords((2, 2), (2, 2), (2, 2))
-SNOW = tex_coords((1, 3), (0, 1), (0, 3))
-WOODEN_PLANKS = tex_coords((2, 3), (2, 3), (2, 3))
+STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 FACES = [
     ( 0, 1, 0),
@@ -215,43 +157,42 @@ class Model(object):
 
     def _initialize(self):
         """ Initialize the world by placing all the blocks.
-        """
 
+        """
         n = 80  # 1/2 width and height of world
         s = 1  # step size
         y = 0  # initial y height
         for x in xrange(-n, n + 1, s):
             for z in xrange(-n, n + 1, s):
-                # create a layer of badstone and grass everywhere.
+                # create a layer stone an grass everywhere.
                 self.add_block((x, y - 2, z), GRASS, immediate=False)
-                self.add_block((x, y - 3, z), BADSTONE, immediate=False)
+                self.add_block((x, y - 3, z), STONE, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
-                    for dy in xrange(-2, 20):
-                        self.add_block((x, y + dy, z), BADSTONE, immediate=False)
+                    for dy in xrange(-2, 3):
+                        self.add_block((x, y + dy, z), STONE, immediate=False)
 
         # generate the hills randomly
         o = n - 10
-        for _ in xrange(150):
+        for _ in xrange(120):
             a = random.randint(-o, o)  # x position of the hill
             b = random.randint(-o, o)  # z position of the hill
             c = -1  # base of the hill
-            h = random.randint(1, 4)  # height of the hill
+            h = random.randint(1, 6)  # height of the hill
             s = random.randint(4, 8)  # 2 * s is the side length of the hill
             d = 1  # how quickly to taper off the hills
-            # Add here the constants of the blocks used for the generation of the hills
-            t = random.choice([DIRT, GRASS, SNOW, SAND,])
+            t = random.choice([GRASS, SAND, BRICK])
             for y in xrange(c, c + h):
-                for x in xrange(a - s, a + s + 2):
-                    for z in xrange(b - s, b + s + 2):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 4:
+                for x in xrange(a - s, a + s + 1):
+                    for z in xrange(b - s, b + s + 1):
+                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
                             continue
                         if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
                             continue
-                        self.add_block((x, y, z), t, immediate = False)
+                        self.add_block((x, y, z), t, immediate=False)
                 s -= d  # decrement side lenth so hills taper off
 
-    def hit_test(self, position, vector, max_distance = NODE_SELECTOR):
+    def hit_test(self, position, vector, max_distance=8):
         """ Line of sight search from current position. If a block is
         intersected it is returned, along with the block previously in the line
         of sight. If no block is found, return None, None.
@@ -279,7 +220,7 @@ class Model(object):
         return None, None
 
     def exposed(self, position):
-        """ Returns False if given `position` is surrounded on all 6 sides by
+        """ Returns False is given `position` is surrounded on all 6 sides by
         blocks, True otherwise.
 
         """
@@ -289,7 +230,7 @@ class Model(object):
                 return True
         return False
 
-    def add_block(self, position, texture, immediate = True):
+    def add_block(self, position, texture, immediate=True):
         """ Add a block with the given `texture` and `position` to the world.
 
         Parameters
@@ -312,7 +253,7 @@ class Model(object):
                 self.show_block(position)
             self.check_neighbors(position)
 
-    def remove_block(self, position, immediate = True):
+    def remove_block(self, position, immediate=True):
         """ Remove the block at the given `position`.
 
         Parameters
@@ -349,7 +290,7 @@ class Model(object):
                 if key in self.shown:
                     self.hide_block(key)
 
-    def show_block(self, position, immediate = True):
+    def show_block(self, position, immediate=True):
         """ Show the block at the given `position`. This method assumes the
         block has already been added with add_block()
 
@@ -389,7 +330,7 @@ class Model(object):
             ('v3f/static', vertex_data),
             ('t2f/static', texture_data))
 
-    def hide_block(self, position, immediate = True):
+    def hide_block(self, position, immediate=True):
         """ Hide the block at the given `position`. Hiding does not remove the
         block from the world.
 
@@ -501,15 +442,6 @@ class Window(pyglet.window.Window):
         # When flying gravity has no effect and speed is increased.
         self.flying = False
 
-        # toggles all gui elements including the reticle and block highlighing
-        self.toggleGui = True
-
-        # toggles the text in the upper left corner
-        self.toggleLabel = True
-
-        # Determine if player is running. If false, then player is walking.
-        self.running = False
-
         # Strafing is moving lateral to the direction you are facing,
         # e.g. moving to the left or right while continuing to face forward.
         #
@@ -540,7 +472,7 @@ class Window(pyglet.window.Window):
         self.dy = 0
 
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [DIRT, GRASS, SAND, SNOW, BRICK, TREE, LEAVES, WOODEN_PLANKS]
+        self.inventory = [BRICK, GRASS, SAND]
 
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
@@ -554,15 +486,8 @@ class Window(pyglet.window.Window):
         self.model = Model()
 
         # The label that is displayed in the top left of the canvas.
-        self.label = pyglet.text.Label('', font_name='Arial', font_size=12,
+        self.label = pyglet.text.Label('', font_name='Arial', font_size=18,
             x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
-            color=(0, 0, 0, 255))
-
-        # Boolean whether to display loading screen
-        self.is_initializing = True
-        # Loading screen label displayed in center of canvas
-        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
-            x=self.width // 2, y=self.height // 2, anchor_x='center', anchor_y='center',
             color=(0, 0, 0, 255))
 
         # This call schedules the `update()` method to be called
@@ -627,10 +552,6 @@ class Window(pyglet.window.Window):
                 dy = 0.0
                 dx = math.cos(x_angle)
                 dz = math.sin(x_angle)
-        elif self.flying and not self.dy == 0:
-            dx = 0.0
-            dy = self.dy
-            dz = 0.0
         else:
             dy = 0.0
             dx = 0.0
@@ -670,7 +591,7 @@ class Window(pyglet.window.Window):
 
         """
         # walking
-        speed = FLYING_SPEED if self.flying else RUNNING_SPEED if self.running else WALKING_SPEED
+        speed = FLYING_SPEED if self.flying else WALKING_SPEED
         d = dt * speed # distance covered this tick.
         dx, dy, dz = self.get_motion_vector()
         # New position in space, before accounting for gravity.
@@ -686,8 +607,6 @@ class Window(pyglet.window.Window):
         # collisions
         x, y, z = self.position
         x, y, z = self.collide((x + dx, y + dy, z + dz), PLAYER_HEIGHT)
-        # fix bug for jumping outside the wall and falling to infinity.
-        y = max(-1.25, y)
         self.position = (x, y, z)
 
     def collide(self, position, height):
@@ -763,7 +682,7 @@ class Window(pyglet.window.Window):
                     self.model.add_block(previous, self.block)
             elif button == pyglet.window.mouse.LEFT and block:
                 texture = self.model.world[block]
-                if texture != BADSTONE:
+                if texture != STONE:
                     self.model.remove_block(block)
         else:
             self.set_exclusive_mouse(True)
@@ -808,26 +727,15 @@ class Window(pyglet.window.Window):
         elif symbol == key.D:
             self.strafe[1] += 1
         elif symbol == key.SPACE:
-            if self.flying:
-                self.dy = 0.5 * WALKING_SPEED
-            elif self.dy == 0:
+            if self.dy == 0:
                 self.dy = JUMP_SPEED
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
             self.flying = not self.flying
-        elif symbol == key.LSHIFT:
-            self.running = True
         elif symbol in self.num_keys:
             index = (symbol - self.num_keys[0]) % len(self.inventory)
             self.block = self.inventory[index]
-        elif symbol == key.F12:
-            self.screenshot = pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
-        elif symbol == key.F1:
-            self.toggleGui = not self.toggleGui
-        elif symbol == key.F2:
-            self.toggleLabel = not self.toggleLabel
-            
 
     def on_key_release(self, symbol, modifiers):
         """ Called when the player releases a key. See pyglet docs for key
@@ -849,10 +757,6 @@ class Window(pyglet.window.Window):
             self.strafe[1] += 1
         elif symbol == key.D:
             self.strafe[1] -= 1
-        elif symbol == key.LSHIFT:
-            self.running = False
-        elif symbol == key.SPACE:
-            self.dy = 0
 
     def on_resize(self, width, height):
         """ Called when the window is resized to a new `width` and `height`.
@@ -905,18 +809,13 @@ class Window(pyglet.window.Window):
 
         """
         self.clear()
-        if not self.is_initializing:
-            self.set_3d()
-            glColor3d(1, 1, 1)
-            self.model.batch.draw()
-            if self.toggleGui:
-                self.draw_focused_block()
-                self.set_2d()
-                if self.toggleLabel:
-                    self.draw_label()
-                self.draw_reticle()
+        self.set_3d()
+        glColor3d(1, 1, 1)
+        self.model.batch.draw()
+        self.draw_focused_block()
         self.set_2d()
-        self.is_initializing = False
+        self.draw_label()
+        self.draw_reticle()
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
@@ -937,24 +836,18 @@ class Window(pyglet.window.Window):
         """ Draw the label in the top left of the screen.
 
         """
-        if not self.is_initializing:
-            x, y, z = self.position
-            self.label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
-                pyglet.clock.get_fps(), x, y, z,
-                len(self.model._shown), len(self.model.world))
-            self.label.draw()
-        else:
-            # Only draw the loading screen during the first draw loop
-            self.loading_label.text = 'Loading...'
-            self.loading_label.draw()
+        x, y, z = self.position
+        self.label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
+            pyglet.clock.get_fps(), x, y, z,
+            len(self.model._shown), len(self.model.world))
+        self.label.draw()
 
     def draw_reticle(self):
         """ Draw the crosshairs in the center of the screen.
 
         """
-        if not self.is_initializing:
-            glColor3d(0, 0, 0)
-            self.reticle.draw(GL_LINES)
+        glColor3d(0, 0, 0)
+        self.reticle.draw(GL_LINES)
 
 
 def setup_fog():
@@ -972,8 +865,8 @@ def setup_fog():
     glFogi(GL_FOG_MODE, GL_LINEAR)
     # How close and far away fog starts and ends. The closer the start and end,
     # the denser the fog in the fog range.
-    glFogf(GL_FOG_START, FOG_START)
-    glFogf(GL_FOG_END, FOG_END)
+    glFogf(GL_FOG_START, 20.0)
+    glFogf(GL_FOG_END, 60.0)
 
 
 def setup():
@@ -996,7 +889,7 @@ def setup():
 
 
 def main():
-    window = Window(vsync = True, width = WIDTH, height = HEIGHT, caption = TITLE, resizable = RESIZABLE, fullscreen = FULLSCREEN)
+    window = Window(width=800, height=600, caption='Pyglet', resizable=True)
     # Hide the mouse cursor and prevent the mouse from leaving the window.
     window.set_exclusive_mouse(True)
     setup()
