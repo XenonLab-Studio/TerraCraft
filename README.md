@@ -4,28 +4,23 @@
 
 ## Goals and Vision
 
+TerraCraft is a small SandBox game engine written in Python 3 + Pyglet.
+
+The objectives of this project are as follows:
+
+The intention is to create a small complete game focused exclusively on creative mode.
+
+The project must remain simple, well documented (code and wiki) and easy to modify / improve for students and hobbyists. Keeping the code ordered is very important.
+
 I would like to see this project turn into an educational tool. Kids love Minecraft and Python is a great first language.
-This is a good opportunity to get children excited about programming.
 
-The code should become well commented and more easily configurable. It should be easy to make some simple changes
-and see the results quickly.
+This is a good opportunity to entertain children on programming.
 
-I think it would be great to turn the project into more of a library / API... a Python package that you import and then
-use / configure to setup a world and run it. Something along these lines...
+The code should be well commented and more easily configurable. It should be easy to make some simple changes and see the results quickly.
 
+We are writing a new wiki to help users collaborate on the project in an easy and productive way. If you have questions, suggestions or want to help us, please write to xenon77.dev@gmail.com or open a discussion here on Github in the "Issues" section.
 
-```python
-import terracraft
-
-world = terracraft.World(...)
-world.set_block(x, y, z, terracraft.DIRT)
-terracraft.run(world)
-```
-
-The API could contain functionality for the following:
-
-- Easily configurable parameters like gravity, jump velocity, walking speed, etc.
-- Hooks for terrain generation.
+Thank you all.
 <br/>
 
 ## How to Run
