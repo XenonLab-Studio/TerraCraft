@@ -21,7 +21,8 @@ The objectives of this project are as follows:
 The code should be well commented and more easily configurable. It should be easy to make some simple changes and see the results quickly.
 
 Thank you all.
-<br/>
+
+<br>
 
 ### How to Run
 
@@ -31,7 +32,6 @@ git clone https://github.com/XenonCoder/terracraft.git
 cd terracraft
 python3 main.py
 ```
-<br/>
 
 ### Mac
 
@@ -52,8 +52,7 @@ This assumes you are using the OS X default Python.  Works on Lion 10.7 with the
 See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project to install Python, and other tips.
 <br/>
 
-### How to Play
-<br/>
+## Controls:
 
 ### Moving
 
