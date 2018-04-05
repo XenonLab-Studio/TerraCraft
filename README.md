@@ -98,6 +98,11 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 
 - ESC: release mouse, then close window
 
+### Screenshots
+
+<p align="center"><img src="https://s9.postimg.org/cmjhqtlof/Schermata_del_2018-04-05_15-35-54.png" >
+
+
 ## License
 
 Copyright (C) 2013 Michael Fogleman<br>
