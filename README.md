@@ -74,11 +74,14 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 ### Building
 
 - Selecting type of block to create:
-    - 1: Dirt_with_Grass
-    - 2: Sand
-    - 3: Brick
-    - 4: Oak trunk
-    - 5: Leaves
+    - 1: Dirt
+    - 2: Dirt_with_Grass
+    - 3: Snow
+    - 4: Sand
+    - 5: Brick
+    - 6: Tree
+    - 7: Leaves
+    - 8: Wooden_Planks
     - Mouse left-click: remove block
     - Mouse right-click: create block
     
