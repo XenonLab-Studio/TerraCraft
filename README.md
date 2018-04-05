@@ -2,28 +2,28 @@
 <br>
 <br>
 
-## Goals and Vision
+### Goals and Vision
 
 TerraCraft is a small SandBox game engine written in Python 3 + Pyglet.
 
 The objectives of this project are as follows:
 
-The intention is to create a small complete game focused exclusively on creative mode.
+- The intention is to create a small complete game focused exclusively on creative mode.
 
-The project must remain simple, well documented (code and wiki) and easy to modify / improve for students and hobbyists. Keeping the code ordered is very important.
+- The project must remain simple, well documented (code and wiki) and easy to modify / improve for students and hobbyists. Keeping the code ordered is very important.
 
-I would like to see this project turn into an educational tool. Kids love Minecraft and Python is a great first language.
+- I would like to see this project turn into an educational tool. Kids love Minecraft and Python is a great first language.
 
-This is a good opportunity to entertain children on programming.
+- This is a good opportunity to entertain children on programming.
+
+- We are writing a new wiki to help users collaborate on the project in an easy and productive way. If you have questions, suggestions or want to help us, please write to xenon77.dev@gmail.com or open a discussion here on Github in the "Issues" section.
 
 The code should be well commented and more easily configurable. It should be easy to make some simple changes and see the results quickly.
-
-We are writing a new wiki to help users collaborate on the project in an easy and productive way. If you have questions, suggestions or want to help us, please write to xenon77.dev@gmail.com or open a discussion here on Github in the "Issues" section.
 
 Thank you all.
 <br/>
 
-## How to Run
+### How to Run
 
 ```bash
 sudo pip3 install pyglet
@@ -52,7 +52,7 @@ This assumes you are using the OS X default Python.  Works on Lion 10.7 with the
 See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project to install Python, and other tips.
 <br/>
 
-## How to Play
+### How to Play
 <br/>
 
 ### Moving
