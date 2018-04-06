@@ -26,7 +26,7 @@ Thank you all.
 
 ### How to Run
 
-```bash
+```shell
 sudo pip3 install pyglet
 git clone https://github.com/XenonCoder/TerraCraft.git
 cd TerraCraft
