@@ -586,6 +586,13 @@ class Window(pyglet.window.Window):
             x=10, y = self.height - 10, anchor_x = 'left', anchor_y = 'top',
             color = (0, 0, 0, 255))
 
+        # Boolean whether to display loading screen.
+        self.is_initializing = True
+        # Loading screen label displayed in center of canvas.
+        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
+            x=self.width // 2, y=self.height // 2, anchor_x='center', anchor_y='center',
+            color=(0, 0, 0, 255))
+
         # This call schedules the `update()` method to be called
         # TICKS_PER_SEC. This is the main game event loop.
         pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
@@ -924,18 +931,30 @@ class Window(pyglet.window.Window):
 
     def on_draw(self):
         """ Called by pyglet to draw the canvas.
-
+        
         """
         self.clear()
-        self.set_3d()
-        glColor3d(1, 1, 1)
-        self.model.batch.draw()
-        if self.toggleGui:
-            self.draw_focused_block()
+        if not self.is_initializing:
+            self.set_3d()
+            glColor3d(1, 1, 1)
+            self.model.batch.draw()
+            if self.toggleGui:
+                self.draw_focused_block()
+                self.set_2d()
+                if self.toggleLabel:
+                    self.draw_label()
+                    self.set_2d()
+                self.draw_reticle()
+        # Loading screen
+        """ the "self.set_2d()" and "self.draw_label()" functions
+            are located here to avoid conflicts with "toggleGui" and "toggleLabel"
+            for draw_focused_block, and draw_label (label for info fps/coords).
+        """
+        if self.is_initializing:
             self.set_2d()
-            if self.toggleLabel:
-                self.draw_label()
-            self.draw_reticle()
+            self.draw_label()
+            self.loading_label.delete()
+            self.is_initializing = False
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
@@ -956,18 +975,24 @@ class Window(pyglet.window.Window):
         """ Draw the label in the top left of the screen.
 
         """
-        x, y, z = self.position
-        self.info_label.text = 'FPS = [%02d] : COORDS = [%.2f, %.2f, %.2f] : %d / %d' % (
-            pyglet.clock.get_fps(), x, y, z,
-            len(self.model._shown), len(self.model.world))
-        self.info_label.draw()
+        if not self.is_initializing:
+            x, y, z = self.position
+            self.info_label.text = 'FPS = [%02d] : COORDS = [%.2f, %.2f, %.2f] : %d / %d' % (
+                pyglet.clock.get_fps(), x, y, z,
+                len(self.model._shown), len(self.model.world))
+            self.info_label.draw()
+        else:
+            # Only draw the loading screen during the first draw loop.
+            self.loading_label.text = 'Loading...'
+            self.loading_label.draw()
 
     def draw_reticle(self):
         """ Draw the crosshairs in the center of the screen.
 
         """
-        glColor3d(0, 0, 0)
-        self.reticle.draw(GL_LINES)
+        if not self.is_initializing:
+            glColor3d(0, 0, 0)
+            self.reticle.draw(GL_LINES)
 
 
 def setup_fog():
