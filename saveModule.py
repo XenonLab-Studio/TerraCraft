@@ -45,7 +45,7 @@ class saveModule(object):
         # "tarnslate" the words back into tuples for loading
         self.coordDictLoad = { 'DIRT':main.DIRT, 'GRASS':main.GRASS, 'SNOW':main.SNOW, 'SAND':main.SAND,
         'BRICK':main.BRICK, 'TREE':main.TREE, 'LEAVES':main.LEAVES, 'WOODEN_PLANKS':main.WOODEN_PLANKS,
-                               'BADSTONE': main.BADSTONE}
+        'BADSTONE': main.BADSTONE}
         
         self.saveGameFile = 'savegame.sav'
         
