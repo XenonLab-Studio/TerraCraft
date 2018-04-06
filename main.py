@@ -274,7 +274,7 @@ class Model(object):
                         for z in xrange(b - s, b + s + 1):
                             if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
                                 continue
-                            if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
+                            if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2: # 6 = flat map
                                 continue
                             self.add_block((x, y, z), t, immediate=False)
                     s -= d  # decrement side lenth so hills taper off

@@ -41,15 +41,16 @@ class saveModule(object):
         # "tarnslate" the block texture tuples into readable words for saving
         self.coordDictSave = { str(main.DIRT):'DIRT', str(main.GRASS):'GRASS', str(main.SNOW):'SNOW',
         str(main.SAND):'SAND', str(main.BRICK):'BRICK', str(main.TREE):'TREE', str(main.LEAVES):'LEAVES',
-        str(main.WOODEN_PLANKS):'WOODEN_PLANKS', str(main.BADSTONE):'BADSTONE' }
+        str(main.WOODEN_PLANKS):'WOODEN_PLANKS', str(main.BADSTONE):'BADSTONE'}
         # "tarnslate" the words back into tuples for loading
         self.coordDictLoad = { 'DIRT':main.DIRT, 'GRASS':main.GRASS, 'SNOW':main.SNOW, 'SAND':main.SAND,
-        'BRICK':main.BRICK, 'TREE':main.TREE, str(main.WOODEN_PLANKS):'WOODEN_PLANKS', 'BADSTONE':main.BADSTONE }
+        'BRICK':main.BRICK, 'TREE':main.TREE, 'LEAVES':main.LEAVES, 'WOODEN_PLANKS':main.WOODEN_PLANKS,
+                               'BADSTONE': main.BADSTONE}
         
         self.saveGameFile = 'savegame.sav'
         
     def printStuff(self, txt):
-        print((strftime("%d-%m-%Y %H:%M:%S|", gmtime()) + str(txt) ))
+        print((strftime("%d-%m-%Y %H:%M:%S|", gmtime()) + str(txt)))
     
     def hasSaveGame(self):
         if os.path.exists(self.saveGameFile):
@@ -60,18 +61,18 @@ class saveModule(object):
     def loadWorld(self, model):
         self.printStuff('start loading...') 
         fh = open(self.saveGameFile, 'r')
-        worldMod = fh.read()
+        world_mod = fh.read()
         fh.close()
         
-        worldMod = worldMod.split('\n')
+        world_mod = world_mod.split('\n')
         
-        for blockLine in worldMod:
+        for blockLine in world_mod:
             # remove the last empty line
             if blockLine != '':
                 coords, blockType = blockLine.split(' => ')
                 # convert the json list into tuple; json ONLY get lists but we need tuples
                 # translate the readable word back into the texture coords
-                model.add_block( tuple(json.loads(coords)), self.coordDictLoad[blockType], False )
+                model.add_block(tuple(json.loads(coords)), self.coordDictLoad[blockType], False)
         
         self.printStuff('loading completed')
         
@@ -85,7 +86,7 @@ class saveModule(object):
         for block in model.world:
             # convert the block coords into json
             # convert with the translation dictionary the block type into a readable word
-            worldString += json.dumps(block) + ' => ' + self.coordDictSave[ str(model.world[block]) ] + '\n'
+            worldString += json.dumps(block) + ' => ' + self.coordDictSave[str(model.world[block])] + '\n'
 
         fh.write(worldString)
         fh.close()
