@@ -45,7 +45,7 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
-import saveModule
+import saveload
 
 
 ############################## ENGINE SETTINGS ##############################
@@ -234,7 +234,7 @@ class Model(object):
         self.queue = deque()
 
         # A module to save and load the world
-        self.saveModule = saveModule.saveModule()
+        self.saveModule = saveload.saveModule()
 
         self._initialize()
 
