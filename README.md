@@ -28,8 +28,8 @@ Thank you all.
 
 ```bash
 sudo pip3 install pyglet
-git clone https://github.com/XenonCoder/terracraft.git
-cd terracraft
+git clone https://github.com/XenonCoder/TerraCraft.git
+cd TerraCraft
 python3 main.py
 ```
 
