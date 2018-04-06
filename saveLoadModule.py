@@ -47,7 +47,7 @@ class saveModule(object):
         'BRICK':main.BRICK, 'TREE':main.TREE, 'LEAVES':main.LEAVES, 'WOODEN_PLANKS':main.WOODEN_PLANKS,
         'BADSTONE': main.BADSTONE}
         
-        self.saveGameFile = 'saveworld.sav'
+        self.saveGameFile = 'saveworld.json'
         
     def printStuff(self, txt):
         print((strftime("%d-%m-%Y %H:%M:%S|", gmtime()) + str(txt)))
