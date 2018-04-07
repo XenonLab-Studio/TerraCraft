@@ -109,7 +109,6 @@ Copyright (C) 2018 Stefano Peris<br>
 eMail: <xenon77.dev@gmail.com><br>
 
 Github repository: <https://github.com/XenonCoder/terracraft><br>
-
 <br>
 <br>
 
