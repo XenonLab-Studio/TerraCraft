@@ -98,10 +98,10 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 
 ### Screenshots
 
+<p align="center"><img src="https://s17.postimg.org/ef3cww9nz/screenshot.png" >
+
 <p align="center"><img src="https://s17.postimg.org/dk7mjg7n3/screenshot.png" >
     
-<p align="center"><img src="https://s17.postimg.org/x7amn33xb/68747470733a2f2f73392e706f7374696d672e6f72672f636d6a6871746c6f66.png" >
-
 <p align="center"><img src="https://s17.postimg.org/x7amn33xb/68747470733a2f2f73392e706f7374696d672e6f72672f636d6a6871746c6f66.png" >
 
 ## License
