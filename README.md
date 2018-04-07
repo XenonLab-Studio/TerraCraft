@@ -65,7 +65,7 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 - Tab: toggle flying mode
 - Left-Shift: vertical flying down
 - Left-Ctrl: run
-- ESC: Exit the game
+- ESC: Release mouse, then close window
 
 ### Building
 
