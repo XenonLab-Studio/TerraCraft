@@ -837,11 +837,19 @@ class Window(pyglet.window.Window):
         elif symbol == key.SPACE:
             if self.flying:
                 # Reduces vertical flying speed
+                # 0.1 positive value that allows vertical flight up.
                 self.dy = 0.1 * JUMP_SPEED
             elif self.dy == 0:
                 self.dy = JUMP_SPEED
-        elif symbol == key.LSHIFT:
+        elif symbol == key.LCTRL:
             self.running = True
+        elif symbol == key.LSHIFT:
+            if self.flying:
+                # Reduces vertical flying speed
+                # -0.1 negative value that allows vertical flight down.
+                self.dy = -0.1 * JUMP_SPEED
+            elif self.dy == 0:
+                self.dy = JUMP_SPEED
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
@@ -880,8 +888,10 @@ class Window(pyglet.window.Window):
             self.strafe[1] -= 1
         elif symbol == key.SPACE:
             self.dy = 0
-        elif symbol == key.LSHIFT:
+        elif symbol == key.LCTRL:
             self.running = False
+        elif symbol == key.LSHIFT:
+            self.dy = 0
 
     def on_resize(self, width, height):
         """ Called when the window is resized to a new `width` and `height`.

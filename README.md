@@ -61,9 +61,10 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 - A: strafe left
 - D: strafe right
 - Mouse: look around
-- Space: jump + vertical flying
-- Left Shift: run
+- Space: jump + vertical flying up
 - Tab: toggle flying mode
+- Left-Shift: vertical flying down
+- Left-Ctrl: run
 
 ### Building
 
