@@ -1,4 +1,4 @@
-<p align="center"><img src="/Terracraft.png" width="600" >
+<p align="center"><img src="img/Terracraft.png" width="600" >
 <br>
 <br>
 
@@ -126,6 +126,6 @@ DEALINGS IN THE SOFTWARE.
 
 <p align="center"><b>This software is licensed under the GPL3 license.</b>
 
-<p align="center"><img src="/gpl3_logo.png" width="300" >
+<p align="center"><img src="img/gpl3_logo.png" width="300" >
 
 <p align="center"><i>Find a copy of the full license within this project (LICENSE).</i>
