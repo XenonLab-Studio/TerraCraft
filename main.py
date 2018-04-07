@@ -152,7 +152,7 @@ TEXTURE_PATH = 'img/textures.png'
 
 # top, bottom, side
 DIRT = tex_coords((0, 1), (0, 1), (0, 1))
-GRASS = tex_coords((1, 0), (0, 1), (0, 0))
+DIRT_WITH_GRASS = tex_coords((1, 0), (0, 1), (0, 0))
 SAND = tex_coords((1, 1), (1, 1), (1, 1))
 BRICK = tex_coords((2, 0), (2, 0), (2, 0))
 BADSTONE = tex_coords((2, 1), (2, 1), (2, 1))
@@ -251,8 +251,8 @@ class Model(object):
             y = 0  # initial y height
             for x in xrange(-n, n + 1, s):
                 for z in xrange(-n, n + 1, s):
-                    # create a layer stone an grass everywhere.
-                    self.add_block((x, y - 2, z), GRASS, immediate=False)
+                    # create a layer stone an DIRT_WITH_GRASS everywhere.
+                    self.add_block((x, y - 2, z), DIRT_WITH_GRASS, immediate=False)
                     self.add_block((x, y - 3, z), BADSTONE, immediate=False)
                     if x in (-n, n) or z in (-n, n):
                         # create outer walls.
@@ -268,7 +268,7 @@ class Model(object):
                 h = random.randint(1, 6)  # height of the hill
                 s = random.randint(4, 8)  # 2 * s is the side length of the hill
                 d = 1  # how quickly to taper off the hills
-                t = random.choice([GRASS, SNOW, SAND])
+                t = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
                 for y in xrange(c, c + h):
                     for x in xrange(a - s, a + s + 1):
                         for z in xrange(b - s, b + s + 1):
@@ -568,7 +568,7 @@ class Window(pyglet.window.Window):
         self.dy = 0
 
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [DIRT, GRASS, SAND, SNOW, BRICK, TREE, LEAVES, WOODEN_PLANKS]
+        self.inventory = [DIRT, DIRT_WITH_GRASS, SAND, SNOW, BRICK, TREE, LEAVES, WOODEN_PLANKS]
 
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
@@ -738,7 +738,7 @@ class Window(pyglet.window.Window):
         # How much overlap with a dimension of a surrounding block you need to
         # have to count as a collision. If 0, touching terrain at all counts as
         # a collision. If .49, you sink into the ground, as if walking through
-        # tall grass. If >= .5, you'll fall through the ground.
+        # tall DIRT_WITH_GRASS. If >= .5, you'll fall through the ground.
         pad = 0.25
         p = list(position)
         np = normalize(position)

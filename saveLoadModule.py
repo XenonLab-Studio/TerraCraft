@@ -39,11 +39,11 @@ from time import gmtime, strftime
 class saveModule(object):
     def __init__(self):
         # "tarnslate" the block texture tuples into readable words for saving
-        self.coordDictSave = { str(main.DIRT):'DIRT', str(main.GRASS):'GRASS', str(main.SNOW):'SNOW',
+        self.coordDictSave = { str(main.DIRT):'DIRT', str(main.DIRT_WITH_GRASS):'DIRT_WITH_GRASS', str(main.SNOW):'SNOW',
         str(main.SAND):'SAND', str(main.BRICK):'BRICK', str(main.TREE):'TREE', str(main.LEAVES):'LEAVES',
         str(main.WOODEN_PLANKS):'WOODEN_PLANKS', str(main.BADSTONE):'BADSTONE'}
         # "tarnslate" the words back into tuples for loading
-        self.coordDictLoad = { 'DIRT':main.DIRT, 'GRASS':main.GRASS, 'SNOW':main.SNOW, 'SAND':main.SAND,
+        self.coordDictLoad = { 'DIRT':main.DIRT, 'DIRT_WITH_GRASS':main.DIRT_WITH_GRASS, 'SNOW':main.SNOW, 'SAND':main.SAND,
         'BRICK':main.BRICK, 'TREE':main.TREE, 'LEAVES':main.LEAVES, 'WOODEN_PLANKS':main.WOODEN_PLANKS,
         'BADSTONE': main.BADSTONE}
         
