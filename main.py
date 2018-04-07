@@ -56,7 +56,7 @@ WIDTH = 800
 HEIGHT = 600
 VSYNC = True
 FULLSCREEN = False
-RESIZABLE = False
+RESIZABLE = True
 INFO_LABEL_FONTSIZE = 12
 TOGGLE_GUI = True
 TOGGLE_INFO_LABEL = True
@@ -853,8 +853,8 @@ class Window(pyglet.window.Window):
             elif self.dy == 0:
                 self.dy = JUMP_SPEED
         elif symbol == key.ESCAPE:
-            exit()
-            #self.set_exclusive_mouse(False)
+            self.set_exclusive_mouse(False)
+            #exit()
         elif symbol == key.TAB:
             self.flying = not self.flying
         elif symbol == key.F1:
