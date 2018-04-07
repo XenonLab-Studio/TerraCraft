@@ -98,8 +98,11 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 
 ### Screenshots
 
-<p align="center"><img src="https://s9.postimg.org/cmjhqtlof/Schermata_del_2018-04-05_15-35-54.png" >
+<p align="center"><img src="https://s17.postimg.org/ef3cww9nz/screenshot.png" >
+    
+<p align="center"><img src='https://s17.postimg.org/dk7mjg7n3/screenshot.png" >
 
+<p align="center"><img src="https://s9.postimg.org/cmjhqtlof/Schermata_del_2018-04-05_15-35-54.png" >
 
 ## License
 
