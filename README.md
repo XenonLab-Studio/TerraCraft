@@ -26,6 +26,7 @@ Thank you all.
 ### :dart: Goals to achieve:
 <br/>
 
+- :exclamation: Keep the code ordered, and well commented! realize documentation that is a step by step process for the long-term development of the project. Keep the project easy to understand and simple to change. The wiki is undergoing constant improvement, and will always be updated and improved over time.
 - :floppy_disk: Project optimization and reorganization.
 - :jack_o_lantern: Create dedicated and exclusive textures for *TerraCraft*.
 - :video_game: A new inventory system, which can be recalled with the "**I**" key and a configurable hotbar (from a minimum of 8 to a maximum of 15 frames). The current inventory system allows you to select blocks using the keyboard keys 1 to 0, without displaying the active block. Removing the limit of only 10 blocks is one of the priorities of the project.
