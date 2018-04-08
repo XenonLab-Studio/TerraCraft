@@ -21,8 +21,18 @@ The objectives of this project are as follows:
 The code should be well commented and more easily configurable. It should be easy to make some simple changes and see the results quickly.
 
 Thank you all.
-
 <br>
+
+### :dart: Goals to achieve:
+<br/>
+
+- :floppy_disk: Project optimization and reorganization.
+- :jack_o_lantern: Create dedicated and exclusive textures for *TerraCraft*.
+- :video_game: A new inventory system, which can be recalled with the "**I**" key and a configurable hotbar (from a minimum of 8 to a maximum of 15 frames). The current inventory system allows you to select blocks using the keyboard keys 1 to 0, without displaying the active block. Removing the limit of only 10 blocks is one of the priorities of the project.
+- :space_invader: Improvement of the map generation system, with the possibility of generating the terrain with the Perlin algorithm or a completely flat map. The choice can be made via the game menu when the **New World** button is activated.
+- :bulb: Making a menu at the start of the game, similar to that of *Minecraft* but with a personal and easily customizable gui.
+- :musical_score: Add sound effects and music that can be adjusted and deactivated in game (and from the options menu).
+<br/>
 
 ### How to Run
 
