@@ -45,71 +45,13 @@ from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
 from blocks import *
+from config import *
 import saveLoadModule
 
 
-############################## ENGINE SETTINGS ##############################
-
-# Window settings
-TITLE = 'Terracraft'
-WIDTH = 800
-HEIGHT = 600
-VSYNC = True
-FULLSCREEN = False
-RESIZABLE = True
-INFO_LABEL_FONTSIZE = 12
-TOGGLE_GUI = True
-TOGGLE_INFO_LABEL = True
-
-# FPS
-TICKS_PER_SEC = 60
-
-# Player
-PLAYER_HEIGHT = 2
-RUNNING = False
-FLYING = False
-
-# Look speed
-LOOK_SPEED_X = 0.15
-LOOK_SPEED_Y = 0.15
-
-# Fog range
-FOG_START = 20.0
-FOG_END = 60.0
-
-# Size of sectors used to ease block loading.
-SECTOR_SIZE = 16
-
-# Speed
-WALKING_SPEED = 3
-RUNNING_SPEED = 6
-FLYING_SPEED = 10
-
-# Node selector (block selector)
-NODE_SELECTOR = 8
-
-# Gravity
-GRAVITY = 20.0
-
-# Jump
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
-# To derive the formula for calculating jump speed, first solve
-#    v_t = v_0 + a * t
-# for the time at which you achieve maximum height, where a is the acceleration
-# due to gravity and v_t = 0. This gives:
-#    t = - v_0 / a
-# Use t and the desired MAX_JUMP_HEIGHT to solve for v_0 (jump speed) in
-#    s = s_0 + v_0 * t + (a * t^2) / 2
-
-JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
-
-# Terminal velocity
-TERMINAL_VELOCITY = 50
-
-############################## END SETTINGS ##############################
-
 if sys.version_info[0] >= 3:
     xrange = range
+
 
 def cube_vertices(x, y, z, n):
     """ Return the vertices of the cube at position x, y, z with size 2*n.
@@ -998,6 +940,8 @@ def setup():
 
 
 def main():
+    # http://www.pyglet.org/doc/api/pyglet.gl.Config-class.html
+    config = pyglet.gl.Config(alpha_size = ALPHA_SIZE, double_buffer = DOUBLE_BUFFER)
     window = Window(width = WIDTH, height = HEIGHT, caption = TITLE, resizable = RESIZABLE, fullscreen = FULLSCREEN, vsync = VSYNC)
     # Hide the mouse cursor and prevent the mouse from leaving the window.
     window.set_exclusive_mouse(True)
