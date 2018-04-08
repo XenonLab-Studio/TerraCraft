@@ -2,6 +2,11 @@
 <br>
 <br>
 
+[![Built With](https://img.shields.io/badge/built%20with-Python3-yellow.svg)](https://img.shields.io/badge/built%20with-Python3-yellow.svg)
+</div>
+	
+----------
+
 ### Goals and Vision
 
 TerraCraft is a small SandBox game engine written in Python 3 + Pyglet.
