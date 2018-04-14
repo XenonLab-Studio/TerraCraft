@@ -1,6 +1,6 @@
 #!/bin/python3
 
-'''
+"""
  ________                                        ______                       ______     __
 |        \                                      /      \                     /      \   |  \ 
  \$$$$$$$$______    ______    ______   ______  |  $$$$$$\  ______   ______  |  $$$$$$\ _| $$_
@@ -29,28 +29,22 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
+import pyglet
 
-import math
-import random
-import time
-
-from collections import deque
-from pyglet import image
-from pyglet.graphics import TextureGroup
+from pyglet.gl import *
 from pyglet.window import key, mouse
 
-from blocks import *
-from vox_cube import sectorize
-from vox_cube import normalize
-from vox_cube import cube_vertices
-from config import *
-from main import *
+from .blocks import *
+from .model import Model
+from .vox_cube import cube_vertices
+from .vox_cube import normalize
+from .vox_cube import sectorize
+from .config import *
 
 
 class Window(pyglet.window.Window):
-
     def __init__(self, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
 
@@ -99,7 +93,8 @@ class Window(pyglet.window.Window):
         self.dy = 0
 
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [DIRT, DIRT_WITH_GRASS, SAND, SNOW, COBBLESTONE, BRICK_COBBLESTONE, BRICK, TREE, LEAVES, WOODEN_PLANKS]
+        self.inventory = [DIRT, DIRT_WITH_GRASS, SAND, SNOW, COBBLESTONE,
+                          BRICK_COBBLESTONE, BRICK, TREE, LEAVES, WOODEN_PLANKS]
 
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
@@ -113,20 +108,18 @@ class Window(pyglet.window.Window):
         self.model = Model()
 
         # The label that is displayed in the top left of the canvas.
-        self.info_label = pyglet.text.Label('', font_name = 'Arial', font_size = INFO_LABEL_FONTSIZE,
-            x=10, y = self.height - 10, anchor_x = 'left', anchor_y = 'top',
-            color = (0, 0, 0, 255))
+        self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
+                                            x=10, y=self.height - 10, anchor_x='left',
+                                            anchor_y='top',
+                                            color=(0, 0, 0, 255))
 
         # Boolean whether to display loading screen.
         self.is_initializing = True
         # Loading screen label displayed in center of canvas.
         self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
-            x=self.width // 2, y=self.height // 2, anchor_x='center', anchor_y='center',
-            color=(0, 0, 0, 255))
-
-        # This call schedules the `update()` method to be called
-        # TICKS_PER_SEC. This is the main game event loop.
-        pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
+                                               x=self.width // 2, y=self.height // 2,
+                                               anchor_x='center', anchor_y='center',
+                                               color=(0, 0, 0, 255))
 
     def set_exclusive_mouse(self, exclusive):
         """ If `exclusive` is True, the game will capture the mouse, if False
@@ -215,7 +208,7 @@ class Window(pyglet.window.Window):
             self.sector = sector
         m = 8
         dt = min(dt, 0.2)
-        for _ in xrange(m):
+        for _ in range(m):
             self._update(dt / m)
 
     def _update(self, dt):
@@ -230,7 +223,7 @@ class Window(pyglet.window.Window):
         """
         # walking
         speed = FLYING_SPEED if self.flying else RUNNING_SPEED if self.running else WALKING_SPEED
-        d = dt * speed # distance covered this tick.
+        d = dt * speed  # distance covered this tick.
         dx, dy, dz = self.get_motion_vector()
         # New position in space, before accounting for gravity.
         dx, dy, dz = dx * d, dy * d, dz * d
@@ -274,14 +267,14 @@ class Window(pyglet.window.Window):
         p = list(position)
         np = normalize(position)
         for face in FACES:  # check all surrounding blocks
-            for i in xrange(3):  # check each dimension independently
+            for i in range(3):  # check each dimension independently
                 if not face[i]:
                     continue
                 # How much overlap you have with this dimension.
                 d = (p[i] - np[i]) * face[i]
                 if d < pad:
                     continue
-                for dy in xrange(height):  # check each height
+                for dy in range(height):  # check each height
                     op = list(np)
                     op[1] -= dy
                     op[i] += face[i]
@@ -383,7 +376,7 @@ class Window(pyglet.window.Window):
                 self.dy = JUMP_SPEED
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
-            #exit()
+            # exit()
         elif symbol == key.TAB:
             self.flying = not self.flying
         elif symbol == key.F1:
@@ -391,9 +384,9 @@ class Window(pyglet.window.Window):
         elif symbol == key.F2:
             self.toggleLabel = not self.toggleLabel
         elif symbol == key.F5:
-            self.model.saveModule.saveWorld(self.model)
+            self.model.save_manager.save_world(self.model)
         elif symbol == key.F12:
-            self.screenshot = pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
+            pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
         elif symbol in self.num_keys:
             index = (symbol - self.num_keys[0]) % len(self.inventory)
             self.block = self.inventory[index]
@@ -436,8 +429,8 @@ class Window(pyglet.window.Window):
             self.reticle.delete()
         x, y = self.width // 2, self.height // 2
         n = 10
-        self.reticle = pyglet.graphics.vertex_list(4,
-            ('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
+        self.reticle = pyglet.graphics.vertex_list(
+            4, ('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
         )
 
     def set_2d(self):

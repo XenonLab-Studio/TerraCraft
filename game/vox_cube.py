@@ -1,6 +1,6 @@
 #!/bin/python3
 
-'''
+"""
  ________                                        ______                       ______     __
 |        \                                      /      \                     /      \   |  \ 
  \$$$$$$$$______    ______    ______   ______  |  $$$$$$\  ______   ______  |  $$$$$$\ _| $$_
@@ -29,19 +29,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 
-import math
-import random
-import time
-
-from collections import deque
-from pyglet import image
-from pyglet.graphics import TextureGroup
-from pyglet.window import key, mouse
-
-from config import *
+from .config import *
 
 
 def cube_vertices(x, y, z, n):
