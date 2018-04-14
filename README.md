@@ -116,8 +116,6 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 ### Quitting
 
 - ESC: release mouse, then close window
-    
-<p align="center"><img src="https://s17.postimg.org/x7amn33xb/68747470733a2f2f73392e706f7374696d672e6f72672f636d6a6871746c6f66.png" >
 
 ## License
 
