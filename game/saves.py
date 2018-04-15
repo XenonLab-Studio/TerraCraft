@@ -40,6 +40,8 @@ from time import gmtime, strftime
 
 class SaveManager(object):
     def __init__(self):
+        """SaveManager handles the saving and loading of worlds."""
+
         # Get the standard save path for the OS:
         self.save_path = pyglet.resource.get_settings_path('TerraCraft')
         self.save_file = 'saveworld.dat'
@@ -56,14 +58,18 @@ class SaveManager(object):
         save_file_path = os.path.join(self.save_path, self.save_file)
         self.timestamp_print('start loading...')
 
-        # Load in the
-        with open(save_file_path, 'rb') as file:
-            loaded_world = pickle.load(file)
+        try:
+            with open(save_file_path, 'rb') as file:
+                loaded_world = pickle.load(file)
 
-        for position, block_type in loaded_world.items():
-            model.add_block(position, block_type)
+            for position, block_type in loaded_world.items():
+                model.add_block(position, block_type)
 
-        self.timestamp_print('loading completed')
+            self.timestamp_print('Loading completed.')
+            return True
+        except:     # If loading fails for ANY reason, return False
+            self.timestamp_print('Loading failed! Generating a new map.')
+            return False
 
     def save_world(self, model):
         save_file_path = os.path.join(self.save_path, self.save_file)

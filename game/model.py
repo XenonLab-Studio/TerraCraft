@@ -47,7 +47,6 @@ from .saves import SaveManager
 
 class Model(object):
     def __init__(self):
-
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = pyglet.graphics.Batch()
 
@@ -83,9 +82,10 @@ class Model(object):
         Otherwise, a new map will be generated.
 
         """
-        if self.save_manager.has_save_game() is True:
-            self.save_manager.load_world(self)
-        else:
+        has_save = self.save_manager.has_save_game()
+        load_status = self.save_manager.load_world(self)
+
+        if has_save is False or load_status is False:
             n = 80  # 1/2 width and height of world
             s = 1  # step size
             y = 0  # initial y height
@@ -93,11 +93,11 @@ class Model(object):
                 for z in range(-n, n + 1, s):
                     # create a layer stone an DIRT_WITH_GRASS everywhere.
                     self.add_block((x, y - 2, z), DIRT_WITH_GRASS, immediate=False)
-                    self.add_block((x, y - 3, z), BADSTONE, immediate=False)
+                    self.add_block((x, y - 3, z), BEDSTONE, immediate=False)
                     if x in (-n, n) or z in (-n, n):
                         # create outer walls.
                         for dy in range(-2, 3):
-                            self.add_block((x, y + dy, z), BADSTONE, immediate=False)
+                            self.add_block((x, y + dy, z), BEDSTONE, immediate=False)
 
             # generate the hills randomly
             o = n - 10
@@ -229,33 +229,32 @@ class Model(object):
             Whether or not to show the block immediately.
 
         """
-        texture = self.world[position]
-        self.shown[position] = texture
+        block = self.world[position]
+        self.shown[position] = block
         if immediate:
-            self._show_block(position, texture)
+            self._show_block(position, block)
         else:
-            self._enqueue(self._show_block, position, texture)
+            self._enqueue(self._show_block, position, block)
 
-    def _show_block(self, position, texture):
+    def _show_block(self, position, block):
         """ Private implementation of the `show_block()` method.
 
         Parameters
         ----------
         position : tuple of len 3
             The (x, y, z) position of the block to show.
-        texture : list of len 3
-            The coordinates of the texture squares. Use `tex_coords()` to
-            generate.
+        block : Block instance
+            An instance of the Block class
 
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
-        texture_data = list(texture)
+        # texture_data = list(texture)
         # create vertex list
         # FIXME Maybe `add_indexed()` should be used instead
         self._shown[position] = self.batch.add(24, GL_QUADS, self.group,
                                                ('v3f/static', vertex_data),
-                                               ('t2f/static', texture_data))
+                                               ('t2f/static', block.tex_coords))
 
     def hide_block(self, position, immediate=True):
         """ Hide the block at the given `position`. Hiding does not remove the
