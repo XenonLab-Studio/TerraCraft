@@ -43,7 +43,6 @@ from pyglet.window import key, mouse
 from pyglet.graphics import TextureGroup
 
 from .blocks import *
-from .vox_cube import *
 from .graphics import set_2d, set_3d
 from .savemanager import SaveManager
 
