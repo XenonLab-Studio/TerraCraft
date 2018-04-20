@@ -31,53 +31,52 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-from .config import *
-
-
-def cube_vertices(x, y, z, n):
-    """ Return the vertices of the cube at position x, y, z with size 2*n.
-    """
-    return [
-        x-n,y+n,z-n, x-n,y+n,z+n, x+n,y+n,z+n, x+n,y+n,z-n,  # top
-        x-n,y-n,z-n, x+n,y-n,z-n, x+n,y-n,z+n, x-n,y-n,z+n,  # bottom
-        x-n,y-n,z-n, x-n,y-n,z+n, x-n,y+n,z+n, x-n,y+n,z-n,  # left
-        x+n,y-n,z+n, x+n,y-n,z-n, x+n,y+n,z-n, x+n,y+n,z+n,  # right
-        x-n,y-n,z+n, x+n,y-n,z+n, x+n,y+n,z+n, x-n,y+n,z+n,  # front
-        x+n,y-n,z-n, x-n,y-n,z-n, x-n,y+n,z-n, x+n,y+n,z-n,  # back
-    ]
+from .scenes import *
 
 
-def normalize(position):
-    """ Accepts `position` of arbitrary precision and returns the block
-    containing that position.
+class SceneManager:
+    """A class to handle switching between Scenes instances."""
+    def __init__(self, window):
+        self.window = window
 
-    Parameters
-    ----------
-    position : tuple of len 3
+        # A dictionary of available Scenes
+        self.scenes = {}
+        self.current_scene = None
 
-    Returns
-    -------
-    block_position : tuple of ints of len 3
+        # Add the defaults Scenes to the manager
+        self.add_scene(MenuScene(self.window))
+        self.add_scene(GameScene(self.window))
+        self.change_scene("MenuScene")
 
-    """
-    x, y, z = position
-    x, y, z = (int(round(x)), int(round(y)), int(round(z)))
-    return (x, y, z)
+    def add_scene(self, scene_instance):
+        """Add a Scene instance to the manager.
 
+        :param scene_instance: An instace of a `Scene`.
+        """
+        scene_instance.scene_manager = self
+        self.scenes[scene_instance.__class__.__name__] = scene_instance
 
-def sectorize(position):
-    """ Returns a tuple representing the sector for the given `position`.
+    def change_scene(self, scene_name):
+        """Change to a specific Scene, by name.
 
-    Parameters
-    ----------
-    position : tuple of len 3
+        When changing to a new Scene, any event handlers that are
+        defined will be activated. Any handlers on the current
+        Scene will be removed.
 
-    Returns
-    -------
-    sector : tuple of len 3
+        :param scene_name: A `str` of the desired Scene class name.
+        """
+        assert scene_name in self.scenes, "Requested scene not found: {}".format(scene_name)
+        if self.current_scene:
+            self.window.remove_handlers(self.current_scene)
+        self.current_scene = self.scenes[scene_name]
+        self.window.push_handlers(self.current_scene)
 
-    """
-    x, y, z = normalize(position)
-    x, y, z = x // SECTOR_SIZE, y // SECTOR_SIZE, z // SECTOR_SIZE
-    return (x, 0, z)
+    def update(self, dt):
+        """Update the currently set Scene.
+
+        This method should be scheduled to be called repeatedly by
+        the pyglet clock.
+
+        :param dt: float: The change in time since the last call.
+        """
+        self.current_scene.update(dt)
