@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+#!/bin/python3
 
 """
  ________                                        ______                       ______     __
@@ -31,26 +30,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-import pyglet
-
-from pyglet.gl import *
-from game.graphics import *
-from game.scenemanager import SceneManager
+from .scenes import *
 
 
-def main():
-    # http://www.pyglet.org/doc/api/pyglet.gl.Config-class.html
-    config = Config(alpha_size=ALPHA_SIZE, double_buffer=DOUBLE_BUFFER)
-    window = pyglet.window.Window(width=WIDTH, height=HEIGHT, caption=TITLE,
-                                  resizable=RESIZABLE, fullscreen=FULLSCREEN, vsync=VSYNC)
-    # Hide the mouse cursor and prevent the mouse from leaving the window.
-    # window.set_exclusive_mouse(True)
-    scene_manager = SceneManager(window=window)
-    pyglet.clock.schedule_interval(scene_manager.update, 1.0 / TICKS_PER_SEC)
-    setup_opengl()
-    pyglet.app.run()
+class SceneManager:
+    def __init__(self, window):
+        self.window = window
 
+        self.scenes = {}
+        self.current_scene = None
 
-if __name__ == '__main__':
-    main()
+        self.add_scene(GameScene(self.window))
+        self.change_scene("GameScene")
+
+    def add_scene(self, scene_instance):
+        self.scenes[scene_instance.__class__.__name__] = scene_instance
+
+    def change_scene(self, scene_name):
+        if self.current_scene:
+            self.window.pop_handlers(self.current_scene)
+        self.current_scene = self.scenes[scene_name]
+        self.window.push_handlers(self.current_scene)
+
+    def update(self, dt):
+        """ This method is scheduled to be called repeatedly by the pyglet
+        clock.
+
+        Parameters
+        ----------
+        dt : float
+            The change in time since the last call.
+
+        """
+        self.current_scene.update(dt)
