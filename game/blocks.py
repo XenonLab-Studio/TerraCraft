@@ -33,8 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from .config import *
 
-TEXTURE_PATH = 'img/textures.png'
-
 
 def _tex_coord(x, y, n=4):
     """ Return the bounding vertices of the texture square.

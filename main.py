@@ -40,7 +40,10 @@ from game.scenemanager import SceneManager
 
 
 def main():
-    # http://www.pyglet.org/doc/api/pyglet.gl.Config-class.html
+    # The pyglet.resource module handles efficient loading of media.
+    pyglet.resource.path = ['img']
+    pyglet.resource.reindex()
+
     config = Config(alpha_size=ALPHA_SIZE, double_buffer=DOUBLE_BUFFER)
     window = pyglet.window.Window(width=WIDTH, height=HEIGHT, caption=TITLE,
                                   resizable=RESIZABLE, fullscreen=FULLSCREEN, vsync=VSYNC)

@@ -37,9 +37,9 @@ import pyglet
 
 from collections import deque
 
-from pyglet import image
 from pyglet.gl import *
 from pyglet.window import key, mouse
+from pyglet.sprite import Sprite
 from pyglet.graphics import TextureGroup
 
 from .blocks import *
@@ -48,7 +48,16 @@ from .savemanager import SaveManager
 
 
 class Scene:
-    """A base class for all game scenes."""
+    """A base class for all Scenes to inherrit from.
+
+    All Scenes must contain an `update` method. In addition,
+    you can also define event handlers for any of the events
+    dispatched by the `Window`. Any Scene methods that match
+    the Window event names will be automatically set when
+    changing to the Scene.
+    """
+
+    scene_manager = None
 
     def update(self, dt):
         raise NotImplementedError
@@ -57,9 +66,38 @@ class Scene:
 class MenuScene(Scene):
     def __init__(self, window):
         self.window = window
+        self.batch = pyglet.graphics.Batch()
+
+        # Create a
+        title_image = pyglet.resource.image('TerraCraft.png')
+        title_image.anchor_x = title_image.width // 2
+        title_image.anchor_y = title_image.height + 10
+        position = self.window.width // 2, self.window.height
+        self.title_graphic = Sprite(img=title_image, x=position[0], y=position[1], batch=self.batch)
+
+        self.start_label = pyglet.text.Label('Press Enter key to start', font_size=25,
+                                             x=self.window.width // 2, y=self.window.height // 2,
+                                             anchor_x='center', anchor_y='center', batch=self.batch)
 
     def update(self, dt):
         pass
+
+    def on_key_press(self, symbol, modifiers):
+        """Event handler for the Window.on_key_press event."""
+        if symbol == key.ENTER:
+            self.scene_manager.change_scene('GameScene')
+
+    def on_resize(self, width, height):
+        """Event handler for the Window.on_resize event."""
+        # Keep the graphics centered on resize
+        self.title_graphic.position = width//2, height
+        self.start_label.x = width // 2
+        self.start_label.y = height // 2
+
+    def on_draw(self):
+        """Event handler for the Window.on_draw event."""
+        self.window.clear()
+        self.batch.draw()
 
 
 class GameScene(Scene):
@@ -104,9 +142,6 @@ class GameScene(Scene):
         # Which sector the player is currently in.
         self.sector = None
 
-        # The crosshairs at the center of the screen.
-        self.reticle = None
-
         # Velocity in the y (upward) direction.
         self.dy = 0
 
@@ -124,6 +159,9 @@ class GameScene(Scene):
         # Instance of the model that handles the world.
         self.model = Model()
 
+        # The crosshairs at the center of the screen.
+        self.reticle = self.model.batch.add(4, GL_LINES, None, 'v2i')
+
         # The label that is displayed in the top left of the canvas.
         self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
                                             x=10, y=self.window.height - 10, anchor_x='left',
@@ -137,6 +175,8 @@ class GameScene(Scene):
                                                x=self.window.width // 2, y=self.window.height // 2,
                                                anchor_x='center', anchor_y='center',
                                                color=(0, 0, 0, 255))
+
+        self.on_resize(*self.window.get_size())
 
     def set_exclusive_mouse(self, exclusive):
         """ If `exclusive` is True, the game will capture the mouse, if False
@@ -306,7 +346,9 @@ class GameScene(Scene):
         return tuple(p)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        """ Called when a mouse button is pressed. See pyglet docs for button
+        """Event handler for the Window.on_mouse_press event.
+
+        Called when a mouse button is pressed. See pyglet docs for button
         amd modifier mappings.
 
         Parameters
@@ -338,7 +380,9 @@ class GameScene(Scene):
             self.set_exclusive_mouse(True)
 
     def on_mouse_motion(self, x, y, dx, dy):
-        """ Called when the player moves the mouse.
+        """Event handler for the Window.on_mouse_motion event.
+
+        Called when the player moves the mouse.
 
         Parameters
         ----------
@@ -356,7 +400,9 @@ class GameScene(Scene):
             self.rotation = (x, y)
 
     def on_key_press(self, symbol, modifiers):
-        """ Called when the player presses a key. See pyglet docs for key
+        """Event handler for the Window.on_key_press event.
+
+        Called when the player presses a key. See pyglet docs for key
         mappings.
 
         Parameters
@@ -407,9 +453,13 @@ class GameScene(Scene):
         elif symbol in self.num_keys:
             index = (symbol - self.num_keys[0]) % len(self.inventory)
             self.block = self.inventory[index]
+        elif symbol == key.ENTER:
+            self.scene_manager.change_scene('MenuScene')
 
     def on_key_release(self, symbol, modifiers):
-        """ Called when the player releases a key. See pyglet docs for key
+        """Event handler for the Window.on_key_release event.
+
+        Called when the player releases a key. See pyglet docs for key
         mappings.
 
         Parameters
@@ -436,23 +486,20 @@ class GameScene(Scene):
             self.dy = 0
 
     def on_resize(self, width, height):
-        """ Called when the window is resized to a new `width` and `height`.
+        """Event handler for the Window.on_resize event.
 
+         Called when the window is resized to a new `width` and `height`.
         """
-        # label
+        # Reset the info label and reticle positions.
         self.info_label.y = height - 10
-        # reticle
-        if self.reticle:
-            self.reticle.delete()
-        x, y = self.window.width // 2, self.window.height // 2
+        x, y = width // 2, height // 2
         n = 10
-        self.reticle = pyglet.graphics.vertex_list(
-            4, ('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
-        )
+        self.reticle.vertices[:] = (x - n, y, x + n, y, x, y - n, x, y + n)
 
     def on_draw(self):
-        """ Called by pyglet to draw the canvas.
+        """Event handler for the Window.on_draw event.
 
+        Called by pyglet to draw the canvas.
         """
         self.window.clear()
         if not self.is_initializing:
@@ -465,7 +512,7 @@ class GameScene(Scene):
                 if self.toggleLabel:
                     self.draw_label()
                     set_2d(self.window.get_size())
-                self.draw_reticle()
+                # self.draw_reticle()
         # Loading screen
         """ the "self.set_2d()" and "self.draw_label()" functions
             are located here to avoid conflicts with "toggleGui" and "toggleLabel"
@@ -507,13 +554,13 @@ class GameScene(Scene):
             self.loading_label.text = 'Loading...'
             self.loading_label.draw()
 
-    def draw_reticle(self):
-        """ Draw the crosshairs in the center of the screen.
-
-        """
-        if not self.is_initializing:
-            glColor3d(0, 0, 0)
-            self.reticle.draw(GL_LINES)
+    # def draw_reticle(self):
+    #     """ Draw the crosshairs in the center of the screen.
+    #
+    #     """
+    #     if not self.is_initializing:
+    #         glColor3d(0, 0, 0)
+    #         self.reticle.draw(GL_LINES)
 
 
 class Model(object):
@@ -522,7 +569,7 @@ class Model(object):
         self.batch = pyglet.graphics.Batch()
 
         # A TextureGroup manages an OpenGL texture.
-        self.group = TextureGroup(image.load(TEXTURE_PATH).get_texture())
+        self.group = TextureGroup(pyglet.resource.texture('textures.png'))
 
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
@@ -586,7 +633,7 @@ class Model(object):
                 h = random.randint(1, 6)  # height of the hill
                 s = random.randint(4, 8)  # 2 * s is the side length of the hill
                 d = 1  # how quickly to taper off the hills
-                t = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
+                block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
                 for y in range(c, c + h):
                     for x in range(a - s, a + s + 1):
                         for z in range(b - s, b + s + 1):
@@ -594,7 +641,7 @@ class Model(object):
                                 continue
                             if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
                                 continue
-                            self.add_block((x, y, z), t, immediate=False)
+                            self.add_block((x, y, z), block, immediate=False)
                     s -= d  # decrement side lenth so hills taper off
 
     def hit_test(self, position, vector, max_distance=NODE_SELECTOR):
@@ -635,23 +682,22 @@ class Model(object):
                 return True
         return False
 
-    def add_block(self, position, texture, immediate=True):
+    def add_block(self, position, block, immediate=True):
         """ Add a block with the given `texture` and `position` to the world.
 
         Parameters
         ----------
         position : tuple of len 3
             The (x, y, z) position of the block to add.
-        texture : list of len 3
-            The coordinates of the texture squares. Use `tex_coords()` to
-            generate.
+        block : Block object
+            An instance of the Block class.
         immediate : bool
             Whether or not to draw the block immediately.
 
         """
         if position in self.world:
             self.remove_block(position, immediate)
-        self.world[position] = texture
+        self.world[position] = block
         self.sectors.setdefault(sectorize(position), []).append(position)
         if immediate:
             if self.exposed(position):

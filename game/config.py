@@ -36,7 +36,7 @@ import math
 
 
 # Window settings
-TITLE = 'Terracraft'
+TITLE = 'TerraCraft'
 WIDTH = 800
 HEIGHT = 600
 VSYNC = True
