@@ -40,15 +40,14 @@ from collections import deque
 from pyglet.gl import *
 from pyglet.window import key, mouse
 from pyglet.sprite import Sprite
-from pyglet.graphics import TextureGroup
 
 from .blocks import *
-from .graphics import set_2d, set_3d
+from .graphics import BlockGroup
 from .savemanager import SaveManager
 
 
 class Scene:
-    """A base class for all Scenes to inherrit from.
+    """A base class for all Scenes to inherit from.
 
     All Scenes must contain an `update` method. In addition,
     you can also define event handlers for any of the events
@@ -104,6 +103,12 @@ class GameScene(Scene):
     def __init__(self, window):
         self.window = window
 
+        # A Batch is a collection of vertex lists for batched rendering.
+        self.batch = pyglet.graphics.Batch()
+
+        # A Group manages setting and unsetting OpenGL state.
+        self.block_group = BlockGroup(self.window, pyglet.resource.texture('textures.png'))
+
         # Whether or not the window exclusively captures the mouse.
         self.exclusive = False
 
@@ -157,25 +162,23 @@ class GameScene(Scene):
                          key._6, key._7, key._8, key._9, key._0]
 
         # Instance of the model that handles the world.
-        self.model = Model()
+        self.model = Model(batch=self.batch, group=self.block_group)
 
         # The crosshairs at the center of the screen.
-        self.reticle = self.model.batch.add(4, GL_LINES, None, 'v2i')
+        self.reticle = self.batch.add(4, GL_LINES, None, 'v2i', ('c3B', [0]*12))
 
         # The label that is displayed in the top left of the canvas.
         self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
                                             x=10, y=self.window.height - 10, anchor_x='left',
-                                            anchor_y='top',
-                                            color=(0, 0, 0, 255))
+                                            anchor_y='top', color=(0, 0, 0, 255))
 
         # Boolean whether to display loading screen.
         self.is_initializing = True
         # Loading screen label displayed in center of canvas.
-        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
+        self.loading_label = pyglet.text.Label('Loading...', font_name='Arial', font_size=50,
                                                x=self.window.width // 2, y=self.window.height // 2,
                                                anchor_x='center', anchor_y='center',
                                                color=(0, 0, 0, 255))
-
         self.on_resize(*self.window.get_size())
 
     def set_exclusive_mouse(self, exclusive):
@@ -502,27 +505,21 @@ class GameScene(Scene):
         Called by pyglet to draw the canvas.
         """
         self.window.clear()
-        if not self.is_initializing:
-            set_3d(self.window.get_size(), self.rotation, self.position)
-            glColor3d(1, 1, 1)
-            self.model.batch.draw()
+        if self.is_initializing:
+            self.draw_label()
+            self.loading_label.draw()
+            self.is_initializing = False
+            self.loading_label.delete()
+        else:
+            self.block_group.position = self.position
+            self.block_group.rotation = self.rotation
+
+            self.batch.draw()
+
             if self.toggleGui:
                 self.draw_focused_block()
-                set_2d(self.window.get_size())
                 if self.toggleLabel:
                     self.draw_label()
-                    set_2d(self.window.get_size())
-                # self.draw_reticle()
-        # Loading screen
-        """ the "self.set_2d()" and "self.draw_label()" functions
-            are located here to avoid conflicts with "toggleGui" and "toggleLabel"
-            for draw_focused_block, and draw_label (label for info fps/coords).
-        """
-        if self.is_initializing:
-            set_2d(self.window.get_size())
-            self.draw_label()
-            self.loading_label.delete()
-            self.is_initializing = False
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
@@ -543,33 +540,18 @@ class GameScene(Scene):
         """ Draw the label in the top left of the screen.
 
         """
-        if not self.is_initializing:
-            x, y, z = self.position
-            self.info_label.text = 'FPS = [%02d] : COORDS = [%.2f, %.2f, %.2f] : %d / %d' % (
-                pyglet.clock.get_fps(), x, y, z,
-                self.model.currently_shown, len(self.model.world))
-            self.info_label.draw()
-        else:
-            # Only draw the loading screen during the first draw loop.
-            self.loading_label.text = 'Loading...'
-            self.loading_label.draw()
-
-    # def draw_reticle(self):
-    #     """ Draw the crosshairs in the center of the screen.
-    #
-    #     """
-    #     if not self.is_initializing:
-    #         glColor3d(0, 0, 0)
-    #         self.reticle.draw(GL_LINES)
+        x, y, z = self.position
+        self.info_label.text = 'FPS = [%02d] : COORDS = [%.2f, %.2f, %.2f] : %d / %d' % (
+            pyglet.clock.get_fps(), x, y, z,
+            self.model.currently_shown, len(self.model.world))
+        self.info_label.draw()
 
 
 class Model(object):
-    def __init__(self):
-        # A Batch is a collection of vertex lists for batched rendering.
-        self.batch = pyglet.graphics.Batch()
+    def __init__(self, batch, group):
+        self.batch = batch
 
-        # A TextureGroup manages an OpenGL texture.
-        self.group = TextureGroup(pyglet.resource.texture('textures.png'))
+        self.group = group
 
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.

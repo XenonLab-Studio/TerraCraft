@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from pyglet.gl import *
+from pyglet.graphics import OrderedGroup, TextureGroup
 
 from .config import *
 
@@ -75,34 +76,77 @@ def setup_opengl():
     setup_fog()
 
 
-def set_2d(window_size):
-    """ Configure OpenGL to draw in 2d.
+class BlockGroup(OrderedGroup):
+    def __init__(self, window, texture):
+        super().__init__(order=-1)
+        self.window = window
+        self.texture = texture
+        self.rotation = 0, 0
+        self.position = 0, 0, 0
 
-    """
-    width, height = window_size
-    glDisable(GL_DEPTH_TEST)
-    glViewport(0, 0, width, height)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    glOrtho(0, width, 0, height, -1, 1)
-    glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
+    def set_state(self):
+        glEnable(self.texture.target)
+        glBindTexture(self.texture.target, self.texture.id)
+
+        glColor3d(1, 1, 1)
+        width, height = self.window.get_size()
+        glEnable(GL_DEPTH_TEST)
+        glViewport(0, 0, width, height)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(65.0, width / float(height), 0.1, 60.0)
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        x, y = self.rotation
+        glRotatef(x, 0, 1, 0)
+        glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        x, y, z = self.position
+        glTranslatef(-x, -y, -z)
+
+    def unset_state(self):
+        glDisable(self.texture.target)
+        width, height = self.window.get_size()
+        glDisable(GL_DEPTH_TEST)
+        glViewport(0, 0, width, height)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glOrtho(0, width, 0, height, -1, 1)
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+
+    def __hash__(self):
+        return hash((self.texture.target, self.texture.id, self.parent))
+
+    def __eq__(self, other):
+        return (self.__class__ is other.__class__ and
+                self.texture.target == other.texture.target and
+                self.texture.id == other.texture.id and
+                self.parent == other.parent)
+
+    def __repr__(self):
+        return '%s(id=%d)' % (self.__class__.__name__, self.texture.id)
 
 
-def set_3d(window_size, rotation=(0, 0), position=(0, 0, 0)):
-    """ Configure OpenGL to draw in 3d.
-
-    """
-    width, height = window_size
-    glEnable(GL_DEPTH_TEST)
-    glViewport(0, 0, width, height)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    gluPerspective(65.0, width / float(height), 0.1, 60.0)
-    glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
-    x, y = rotation
-    glRotatef(x, 0, 1, 0)
-    glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
-    x, y, z = position
-    glTranslatef(-x, -y, -z)
+# class DisplayGroup(OrderedGroup):
+#     def __init__(self, window):
+#         super().__init__(order=1)
+#         self.window = window
+#
+#     def set_state(self):
+#         width, height = self.window.get_size()
+#         glDisable(GL_DEPTH_TEST)
+#         glViewport(0, 0, width, height)
+#         glMatrixMode(GL_PROJECTION)
+#         glLoadIdentity()
+#         glOrtho(0, width, 0, height, -1, 1)
+#         glMatrixMode(GL_MODELVIEW)
+#         glLoadIdentity()
+#
+#     def unset_state(self):
+#         pass
+#
+#     def __hash__(self):
+#         return hash(self.order)
+#
+#     def __eq__(self, other):
+#         return self.__class__ is other.__class__
