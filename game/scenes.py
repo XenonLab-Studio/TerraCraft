@@ -108,6 +108,7 @@ class GameScene(Scene):
 
         # A Group manages setting and unsetting OpenGL state.
         self.block_group = BlockGroup(self.window, pyglet.resource.texture('textures.png'))
+        self.hud_group = pyglet.graphics.OrderedGroup(1)
 
         # Whether or not the window exclusively captures the mouse.
         self.exclusive = False
@@ -165,7 +166,7 @@ class GameScene(Scene):
         self.model = Model(batch=self.batch, group=self.block_group)
 
         # The crosshairs at the center of the screen.
-        self.reticle = self.batch.add(4, GL_LINES, None, 'v2i', ('c3B', [0]*12))
+        self.reticle = self.batch.add(4, GL_LINES, self.hud_group, 'v2i', ('c3B', [0]*12))
 
         # The label that is displayed in the top left of the canvas.
         self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
@@ -175,7 +176,7 @@ class GameScene(Scene):
         # Boolean whether to display loading screen.
         self.is_initializing = True
         # Loading screen label displayed in center of canvas.
-        self.loading_label = pyglet.text.Label('Loading...', font_name='Arial', font_size=50,
+        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
                                                x=self.window.width // 2, y=self.window.height // 2,
                                                anchor_x='center', anchor_y='center',
                                                color=(0, 0, 0, 255))
@@ -370,8 +371,7 @@ class GameScene(Scene):
         if self.exclusive:
             vector = self.get_sight_vector()
             block, previous = self.model.hit_test(self.position, vector)
-            if (button == mouse.RIGHT) or \
-                    ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
+            if button == mouse.RIGHT or (button == mouse.LEFT and modifiers & key.MOD_CTRL):
                 # ON OSX, control + left click = right click.
                 if previous:
                     self.model.add_block(previous, self.block)
@@ -506,10 +506,10 @@ class GameScene(Scene):
         """
         self.window.clear()
         if self.is_initializing:
-            self.draw_label()
+            self.loading_label.text = "Loading..."
             self.loading_label.draw()
-            self.is_initializing = False
             self.loading_label.delete()
+            self.is_initializing = False
         else:
             self.block_group.position = self.position
             self.block_group.rotation = self.rotation

@@ -78,7 +78,7 @@ def setup_opengl():
 
 class BlockGroup(OrderedGroup):
     def __init__(self, window, texture):
-        super().__init__(order=-1)
+        super().__init__(order=0)
         self.window = window
         self.texture = texture
         self.rotation = 0, 0
