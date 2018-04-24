@@ -40,6 +40,7 @@ from collections import deque
 from pyglet.gl import *
 from pyglet.window import key, mouse
 from pyglet.sprite import Sprite
+from pyglet.graphics import OrderedGroup
 
 from .blocks import *
 from .graphics import BlockGroup
@@ -85,6 +86,13 @@ class MenuScene(Scene):
         """Event handler for the Window.on_key_press event."""
         if symbol == key.ENTER:
             self.scene_manager.change_scene('GameScene')
+        if symbol == key.ESCAPE:
+            self.window.set_exclusive_mouse(False)
+            return pyglet.event.EVENT_HANDLED
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        """Event handler for the Window.on_resize event."""
+        self.window.set_exclusive_mouse(True)
 
     def on_resize(self, width, height):
         """Event handler for the Window.on_resize event."""
@@ -106,9 +114,9 @@ class GameScene(Scene):
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = pyglet.graphics.Batch()
 
-        # A Group manages setting and unsetting OpenGL state.
-        self.block_group = BlockGroup(self.window, pyglet.resource.texture('textures.png'))
-        self.hud_group = pyglet.graphics.OrderedGroup(1)
+        # pyglet Groups manages setting/unsetting OpenGL state.
+        self.block_group = BlockGroup(self.window, pyglet.resource.texture('textures.png'), order=0)
+        self.hud_group = OrderedGroup(order=1)
 
         # Whether or not the window exclusively captures the mouse.
         self.exclusive = False
@@ -174,7 +182,7 @@ class GameScene(Scene):
                                             anchor_y='top', color=(0, 0, 0, 255))
 
         # Boolean whether to display loading screen.
-        self.is_initializing = True
+        self.initialized = False
         # Loading screen label displayed in center of canvas.
         self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
                                                x=self.window.width // 2, y=self.window.height // 2,
@@ -260,6 +268,15 @@ class GameScene(Scene):
             The change in time since the last call.
 
         """
+        if not self.initialized:
+            print("initializing..... NOW")
+            self.window.clear()
+            self.loading_label.text = "Loading..."
+            self.loading_label.draw()
+            self.model.initialize()
+            self.loading_label.delete()
+            self.initialized = True
+
         self.model.process_queue()
         sector = sectorize(self.position)
         if sector != self.sector:
@@ -505,11 +522,8 @@ class GameScene(Scene):
         Called by pyglet to draw the canvas.
         """
         self.window.clear()
-        if self.is_initializing:
-            self.loading_label.text = "Loading..."
-            self.loading_label.draw()
-            self.loading_label.delete()
-            self.is_initializing = False
+        if not self.initialized:
+            pass
         else:
             self.block_group.position = self.position
             self.block_group.rotation = self.rotation
@@ -573,13 +587,13 @@ class Model(object):
         # A module to save and load the world
         self.save_manager = SaveManager()
 
-        self._initialize()
+        # self.initialize()
 
     @property
     def currently_shown(self):
         return len(self._shown)
 
-    def _initialize(self):
+    def initialize(self):
         """ Initialize the world by placing all the blocks.
 
         Blocks will be loaded from save if available.

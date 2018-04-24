@@ -48,7 +48,6 @@ def main():
     window = pyglet.window.Window(width=WIDTH, height=HEIGHT, caption=TITLE,
                                   resizable=RESIZABLE, fullscreen=FULLSCREEN, vsync=VSYNC)
     # Hide the mouse cursor and prevent the mouse from leaving the window.
-    # window.set_exclusive_mouse(True)
     scene_manager = SceneManager(window=window)
     pyglet.clock.schedule_interval(scene_manager.update, 1.0 / TICKS_PER_SEC)
     setup_opengl()

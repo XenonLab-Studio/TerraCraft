@@ -77,14 +77,15 @@ def setup_opengl():
 
 
 class BlockGroup(OrderedGroup):
-    def __init__(self, window, texture):
-        super().__init__(order=0)
+    def __init__(self, window, texture, order=0):
+        super().__init__(order=order)
         self.window = window
         self.texture = texture
         self.rotation = 0, 0
         self.position = 0, 0, 0
 
     def set_state(self):
+        # Bind the texture, and set a 3D projection.
         glEnable(self.texture.target)
         glBindTexture(self.texture.target, self.texture.id)
 
@@ -104,6 +105,7 @@ class BlockGroup(OrderedGroup):
         glTranslatef(-x, -y, -z)
 
     def unset_state(self):
+        # Set a 2D projection when finished.
         glDisable(self.texture.target)
         width, height = self.window.get_size()
         glDisable(GL_DEPTH_TEST)
@@ -127,26 +129,23 @@ class BlockGroup(OrderedGroup):
         return '%s(id=%d)' % (self.__class__.__name__, self.texture.id)
 
 
-# class DisplayGroup(OrderedGroup):
-#     def __init__(self, window):
-#         super().__init__(order=1)
+# class HUDGroup(OrderedGroup):
+#     def __init__(self, window, order=1):
+#         super().__init__(order=order)
 #         self.window = window
 #
-#     def set_state(self):
-#         width, height = self.window.get_size()
-#         glDisable(GL_DEPTH_TEST)
-#         glViewport(0, 0, width, height)
-#         glMatrixMode(GL_PROJECTION)
-#         glLoadIdentity()
-#         glOrtho(0, width, 0, height, -1, 1)
-#         glMatrixMode(GL_MODELVIEW)
-#         glLoadIdentity()
-#
-#     def unset_state(self):
-#         pass
-#
-#     def __hash__(self):
-#         return hash(self.order)
+#     def __lt__(self, other):
+#         if isinstance(other, HUDGroup):
+#             return self.order < other.order
+#         return super().__lt__(other)
 #
 #     def __eq__(self, other):
-#         return self.__class__ is other.__class__
+#         return (self.__class__ is other.__class__ and
+#                 self.order == other.order and
+#                 self.parent == other.parent)
+#
+#     def __hash__(self):
+#         return hash((self.order, self.parent))
+#
+#     def __repr__(self):
+#         return '%s(%d)' % (self.__class__.__name__, self.order)
