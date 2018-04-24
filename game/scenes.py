@@ -175,6 +175,9 @@ class GameScene(Scene):
 
         # The crosshairs at the center of the screen.
         self.reticle = self.batch.add(4, GL_LINES, self.hud_group, 'v2i', ('c3B', [0]*12))
+        # The highlight around focused block.
+        self.highlight = self.batch.add(24, GL_LINE_STRIP, self.block_group,
+                                        'v3f/dynamic', ('c3B', [0]*72))
 
         # The label that is displayed in the top left of the canvas.
         self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
@@ -269,8 +272,8 @@ class GameScene(Scene):
 
         """
         if not self.initialized:
-            print("initializing..... NOW")
             self.window.clear()
+            self.set_exclusive_mouse(True)
             self.loading_label.text = "Loading..."
             self.loading_label.draw()
             self.model.initialize()
@@ -544,11 +547,9 @@ class GameScene(Scene):
         block = self.model.hit_test(self.position, vector)[0]
         if block:
             x, y, z = block
-            vertex_data = cube_vertices(x, y, z, 0.51)
-            glColor3d(0, 0, 0)
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-            pyglet.graphics.draw(24, GL_QUADS, ('v3f/static', vertex_data))
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            self.highlight.vertices[:] = cube_vertices(x, y, z, 0.51)
+        else:
+            self.highlight.vertices[:] = [0] * 72
 
     def draw_label(self):
         """ Draw the label in the top left of the screen.
