@@ -127,25 +127,3 @@ class BlockGroup(OrderedGroup):
 
     def __repr__(self):
         return '%s(id=%d)' % (self.__class__.__name__, self.texture.id)
-
-
-# class HUDGroup(OrderedGroup):
-#     def __init__(self, window, order=1):
-#         super().__init__(order=order)
-#         self.window = window
-#
-#     def __lt__(self, other):
-#         if isinstance(other, HUDGroup):
-#             return self.order < other.order
-#         return super().__lt__(other)
-#
-#     def __eq__(self, other):
-#         return (self.__class__ is other.__class__ and
-#                 self.order == other.order and
-#                 self.parent == other.parent)
-#
-#     def __hash__(self):
-#         return hash((self.order, self.parent))
-#
-#     def __repr__(self):
-#         return '%s(%d)' % (self.__class__.__name__, self.order)
