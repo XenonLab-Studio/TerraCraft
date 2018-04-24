@@ -63,7 +63,7 @@ class SaveManager(object):
                 loaded_world = pickle.load(file)
 
             for position, block_type in loaded_world.items():
-                model.add_block(position, block_type)
+                model.add_block(position, block_type, immediate=False)
 
             self.timestamp_print('Loading completed.')
             return True
