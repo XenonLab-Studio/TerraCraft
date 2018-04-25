@@ -1,6 +1,6 @@
 #!/bin/python3
 
-'''
+"""
  ________                                        ______                       ______     __
 |        \                                      /      \                     /      \   |  \ 
  \$$$$$$$$______    ______    ______   ______  |  $$$$$$\  ______   ______  |  $$$$$$\ _| $$_
@@ -29,7 +29,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 
 from setuptools import setup
@@ -37,7 +37,7 @@ from setuptools import setup
 setup(
     name='TerraCraft',
     version='0.2.1',
-    packages=['pyglet'], # external packages as dependencies
+    packages=['pyglet'],  # external packages as dependencies
     url='https://github.com/XenonCoder/TerraCraft',
     license='GPL 3.0',
     author='Stefano Peris a.k.a. <XenonCoder>',

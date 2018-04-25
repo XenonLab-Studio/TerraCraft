@@ -43,6 +43,7 @@ from pyglet.sprite import Sprite
 from pyglet.graphics import OrderedGroup
 
 from .blocks import *
+from .utilities import *
 from .graphics import BlockGroup
 from .savemanager import SaveManager
 
@@ -175,9 +176,11 @@ class GameScene(Scene):
 
         # The crosshairs at the center of the screen.
         self.reticle = self.batch.add(4, GL_LINES, self.hud_group, 'v2i', ('c3B', [0]*12))
+
         # The highlight around focused block.
-        self.highlight = self.batch.add(24, GL_LINE_STRIP, self.block_group,
-                                        'v3f/dynamic', ('c3B', [0]*72))
+        indices = [0, 1, 1, 2, 2, 3, 3, 0, 4, 7, 7, 6, 6, 5, 5, 4, 0, 4, 1, 7, 2, 6, 3, 5]
+        self.highlight = self.batch.add_indexed(24, GL_LINES, self.block_group, indices,
+                                                'v3f/dynamic', ('c3B', [0]*72))
 
         # The label that is displayed in the top left of the canvas.
         self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
@@ -186,11 +189,7 @@ class GameScene(Scene):
 
         # Boolean whether to display loading screen.
         self.initialized = False
-        # Loading screen label displayed in center of canvas.
-        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
-                                               x=self.window.width // 2, y=self.window.height // 2,
-                                               anchor_x='center', anchor_y='center',
-                                               color=(0, 0, 0, 255))
+
         self.on_resize(*self.window.get_size())
 
     def set_exclusive_mouse(self, exclusive):
@@ -272,12 +271,8 @@ class GameScene(Scene):
 
         """
         if not self.initialized:
-            self.window.clear()
-            self.set_exclusive_mouse(True)
-            self.loading_label.text = "Loading..."
-            self.loading_label.draw()
             self.model.initialize()
-            self.loading_label.delete()
+            self.set_exclusive_mouse(True)
             self.initialized = True
 
         self.model.process_queue()
@@ -525,18 +520,17 @@ class GameScene(Scene):
         Called by pyglet to draw the canvas.
         """
         self.window.clear()
-        if not self.initialized:
-            pass
-        else:
-            self.block_group.position = self.position
-            self.block_group.rotation = self.rotation
+        # Set the current position/rotation before drawing
+        self.block_group.position = self.position
+        self.block_group.rotation = self.rotation
+        # Draw everything in the batch
+        self.batch.draw()
 
-            self.batch.draw()
-
-            if self.toggleGui:
-                self.draw_focused_block()
-                if self.toggleLabel:
-                    self.draw_label()
+        # Optionally draw some things
+        if self.toggleGui:
+            self.draw_focused_block()
+            if self.toggleLabel:
+                self.draw_label()
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
@@ -549,6 +543,7 @@ class GameScene(Scene):
             x, y, z = block
             self.highlight.vertices[:] = cube_vertices(x, y, z, 0.51)
         else:
+            # Make invisible by setting all vertices to 0
             self.highlight.vertices[:] = [0] * 72
 
     def draw_label(self):
@@ -587,8 +582,6 @@ class Model(object):
 
         # A module to save and load the world
         self.save_manager = SaveManager()
-
-        # self.initialize()
 
     @property
     def currently_shown(self):
@@ -661,10 +654,10 @@ class Model(object):
         dx, dy, dz = vector
         previous = None
         for _ in range(max_distance * m):
-            key = normalize((x, y, z))
-            if key != previous and key in self.world:
-                return key, previous
-            previous = key
+            checked_position = normalize((x, y, z))
+            if checked_position != previous and checked_position in self.world:
+                return checked_position, previous
+            previous = checked_position
             x, y, z = x + dx / m, y + dy / m, z + dz / m
         return None, None
 
@@ -728,15 +721,15 @@ class Model(object):
         """
         x, y, z = position
         for dx, dy, dz in FACES:
-            key = (x + dx, y + dy, z + dz)
-            if key not in self.world:
+            neighbor = (x + dx, y + dy, z + dz)
+            if neighbor not in self.world:
                 continue
-            if self.exposed(key):
-                if key not in self.shown:
-                    self.show_block(key)
+            if self.exposed(neighbor):
+                if neighbor not in self.shown:
+                    self.show_block(neighbor)
             else:
-                if key in self.shown:
-                    self.hide_block(key)
+                if neighbor in self.shown:
+                    self.hide_block(neighbor)
 
     def show_block(self, position, immediate=True):
         """ Show the block at the given `position`. This method assumes the
@@ -770,7 +763,6 @@ class Model(object):
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
-        # texture_data = list(texture)
         # create vertex list
         # FIXME Maybe `add_indexed()` should be used instead
         self._shown[position] = self.batch.add(24, GL_QUADS, self.group,

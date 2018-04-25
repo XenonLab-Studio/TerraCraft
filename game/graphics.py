@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from pyglet.gl import *
-from pyglet.graphics import OrderedGroup, TextureGroup
+from pyglet.graphics import OrderedGroup
 
 from .config import *
 
@@ -77,6 +77,12 @@ def setup_opengl():
 
 
 class BlockGroup(OrderedGroup):
+    """A Group for all 3D elements, such as Blocks.
+
+    This Group will set a 3D projection for rendering
+    any objects that are assigned to it. When finished,
+    it will reset to a default 2D projection.
+    """
     def __init__(self, window, texture, order=0):
         super().__init__(order=order)
         self.window = window
