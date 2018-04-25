@@ -43,6 +43,7 @@ from pyglet.sprite import Sprite
 from pyglet.graphics import OrderedGroup
 
 from .blocks import *
+from .utilities import *
 from .graphics import BlockGroup
 from .savemanager import SaveManager
 

@@ -1,6 +1,6 @@
 #!/bin/python3
 
-'''
+"""
  ________                                        ______                       ______     __
 |        \                                      /      \                     /      \   |  \ 
  \$$$$$$$$______    ______    ______   ______  |  $$$$$$\  ______   ______  |  $$$$$$\ _| $$_
@@ -29,7 +29,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 
 import math
@@ -79,7 +79,7 @@ NODE_SELECTOR = 8
 GRAVITY = 20.0
 
 # Jump
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
+MAX_JUMP_HEIGHT = 1.0   # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
