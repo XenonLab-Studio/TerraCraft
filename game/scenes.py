@@ -654,10 +654,10 @@ class Model(object):
         dx, dy, dz = vector
         previous = None
         for _ in range(max_distance * m):
-            key = normalize((x, y, z))
-            if key != previous and key in self.world:
-                return key, previous
-            previous = key
+            checked_position = normalize((x, y, z))
+            if checked_position != previous and checked_position in self.world:
+                return checked_position, previous
+            previous = checked_position
             x, y, z = x + dx / m, y + dy / m, z + dz / m
         return None, None
 
@@ -721,15 +721,15 @@ class Model(object):
         """
         x, y, z = position
         for dx, dy, dz in FACES:
-            key = (x + dx, y + dy, z + dz)
-            if key not in self.world:
+            neighbor = (x + dx, y + dy, z + dz)
+            if neighbor not in self.world:
                 continue
-            if self.exposed(key):
-                if key not in self.shown:
-                    self.show_block(key)
+            if self.exposed(neighbor):
+                if neighbor not in self.shown:
+                    self.show_block(neighbor)
             else:
-                if key in self.shown:
-                    self.hide_block(key)
+                if neighbor in self.shown:
+                    self.hide_block(neighbor)
 
     def show_block(self, position, immediate=True):
         """ Show the block at the given `position`. This method assumes the
