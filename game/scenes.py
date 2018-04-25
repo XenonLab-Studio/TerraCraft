@@ -189,11 +189,7 @@ class GameScene(Scene):
 
         # Boolean whether to display loading screen.
         self.initialized = False
-        # Loading screen label displayed in center of canvas.
-        self.loading_label = pyglet.text.Label('', font_name='Arial', font_size=50,
-                                               x=self.window.width // 2, y=self.window.height // 2,
-                                               anchor_x='center', anchor_y='center',
-                                               color=(0, 0, 0, 255))
+
         self.on_resize(*self.window.get_size())
 
     def set_exclusive_mouse(self, exclusive):
@@ -275,12 +271,8 @@ class GameScene(Scene):
 
         """
         if not self.initialized:
-            self.window.clear()
             self.set_exclusive_mouse(True)
-            self.loading_label.text = "Loading..."
-            self.loading_label.draw()
             self.model.initialize()
-            self.loading_label.delete()
             self.initialized = True
 
         self.model.process_queue()
@@ -590,8 +582,6 @@ class Model(object):
 
         # A module to save and load the world
         self.save_manager = SaveManager()
-
-        # self.initialize()
 
     @property
     def currently_shown(self):
