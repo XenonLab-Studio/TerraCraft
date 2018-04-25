@@ -35,17 +35,13 @@ from .config import *
 
 
 def cube_vertices(x, y, z, n):
-    """ Return the vertices of the cube at position x, y, z with size 2*n.
+    """Return the vertices of the Block at position x, y, z with size 2*n.
+    :param x: int or float of the Block's x position
+    :param y: int or float of the Block's y position
+    :param z: int or float of the Block's z position
+    :param n: float representing the size of the Block
+    :return: tuple of len 72 containing vertex data for a Block
     """
-    return (x-n, y+n, z-n,  x-n, y+n, z+n,  x+n, y+n, z+n,  x+n, y+n, z-n,  # top
-            x-n, y-n, z-n,  x+n, y-n, z-n,  x+n, y-n, z+n,  x-n, y-n, z+n,  # bottom
-            x-n, y-n, z-n,  x-n, y-n, z+n,  x-n, y+n, z+n,  x-n, y+n, z-n,  # left
-            x+n, y-n, z+n,  x+n, y-n, z-n,  x+n, y+n, z-n,  x+n, y+n, z+n,  # right
-            x-n, y-n, z+n,  x+n, y-n, z+n,  x+n, y+n, z+n,  x-n, y+n, z+n,  # front
-            x+n, y-n, z-n,  x-n, y-n, z-n,  x-n, y+n, z-n,  x+n, y+n, z-n)  # back
-
-
-def outline_vertices(x, y, z, n):
     return (x-n, y+n, z-n,  x-n, y+n, z+n,  x+n, y+n, z+n,  x+n, y+n, z-n,  # top
             x-n, y-n, z-n,  x+n, y-n, z-n,  x+n, y-n, z+n,  x-n, y-n, z+n,  # bottom
             x-n, y-n, z-n,  x-n, y-n, z+n,  x-n, y+n, z+n,  x-n, y+n, z-n,  # left
@@ -55,35 +51,20 @@ def outline_vertices(x, y, z, n):
 
 
 def normalize(position):
-    """ Accepts `position` of arbitrary precision and returns the block
-    containing that position.
+    """Accepts `position` of arbitrary precision clamps it.
 
-    Parameters
-    ----------
-    position : tuple of len 3
-
-    Returns
-    -------
-    block_position : tuple of ints of len 3
-
+    :param position: tuple of len 3
+    :return: tuple of ints of len 3, representing a block position
     """
     x, y, z = position
-    x, y, z = (int(round(x)), int(round(y)), int(round(z)))
-    return x, y, z
+    return int(round(x)), int(round(y)), int(round(z))
 
 
 def sectorize(position):
-    """ Returns a tuple representing the sector for the given `position`.
+    """Returns a tuple representing the sector for the given `position`
 
-    Parameters
-    ----------
-    position : tuple of len 3
-
-    Returns
-    -------
-    sector : tuple of len 3
-
+    :param position: tuple of len 3
+    :return: tuple of len 3 representing the sector
     """
     x, y, z = normalize(position)
-    x, y, z = x // SECTOR_SIZE, y // SECTOR_SIZE, z // SECTOR_SIZE
-    return x, 0, z
+    return x//SECTOR_SIZE, 0, z//SECTOR_SIZE

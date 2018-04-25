@@ -176,9 +176,11 @@ class GameScene(Scene):
 
         # The crosshairs at the center of the screen.
         self.reticle = self.batch.add(4, GL_LINES, self.hud_group, 'v2i', ('c3B', [0]*12))
+
         # The highlight around focused block.
-        self.highlight = self.batch.add(24, GL_LINE_STRIP, self.block_group,
-                                        'v3f/dynamic', ('c3B', [0]*72))
+        indices = [0, 1, 1, 2, 2, 3, 3, 0, 4, 7, 7, 6, 6, 5, 5, 4, 0, 4, 1, 7, 2, 6, 3, 5]
+        self.highlight = self.batch.add_indexed(24, GL_LINES, self.block_group, indices,
+                                                'v3f/dynamic', ('c3B', [0]*72))
 
         # The label that is displayed in the top left of the canvas.
         self.info_label = pyglet.text.Label('', font_name='Arial', font_size=INFO_LABEL_FONTSIZE,
