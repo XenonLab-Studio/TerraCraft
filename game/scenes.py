@@ -279,8 +279,8 @@ class GameScene(Scene):
         sector = sectorize(self.position)
         if sector != self.sector:
             self.model.change_sectors(self.sector, sector)
-            if self.sector is None:
-                self.model.process_entire_queue()
+            # if self.sector is None:
+            #     self.model.process_entire_queue()
             self.sector = sector
         m = 8
         dt = min(dt, 0.2)
@@ -607,7 +607,7 @@ class Model(object):
             for x in range(-n, n + 1, s):
                 for z in range(-n, n + 1, s):
                     # create a layer stone an DIRT_WITH_GRASS everywhere.
-                    self.add_block((x, y - 2, z), DIRT_WITH_GRASS, immediate=False)
+                    self.add_block((x, y - 2, z), DIRT_WITH_GRASS, immediate=True)
                     self.add_block((x, y - 3, z), BEDSTONE, immediate=False)
                     if x in (-n, n) or z in (-n, n):
                         # create outer walls.

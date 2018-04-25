@@ -62,8 +62,11 @@ class SaveManager(object):
             with open(save_file_path, 'rb') as file:
                 loaded_world = pickle.load(file)
 
-            for position, block_type in loaded_world.items():
-                model.add_block(position, block_type, immediate=False)
+            for position, block in loaded_world.items():
+                if block.name == "dirt_with_grass":
+                    model.add_block(position, block, immediate=True)
+                else:
+                    model.add_block(position, block, immediate=False)
 
             self.timestamp_print('Loading completed.')
             return True
