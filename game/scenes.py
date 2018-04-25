@@ -271,8 +271,8 @@ class GameScene(Scene):
 
         """
         if not self.initialized:
-            self.set_exclusive_mouse(True)
             self.model.initialize()
+            self.set_exclusive_mouse(True)
             self.initialized = True
 
         self.model.process_queue()
@@ -520,18 +520,17 @@ class GameScene(Scene):
         Called by pyglet to draw the canvas.
         """
         self.window.clear()
-        if not self.initialized:
-            pass
-        else:
-            self.block_group.position = self.position
-            self.block_group.rotation = self.rotation
+        # Set the current position/rotation before drawing
+        self.block_group.position = self.position
+        self.block_group.rotation = self.rotation
+        # Draw everything in the batch
+        self.batch.draw()
 
-            self.batch.draw()
-
-            if self.toggleGui:
-                self.draw_focused_block()
-                if self.toggleLabel:
-                    self.draw_label()
+        # Optionally draw some things
+        if self.toggleGui:
+            self.draw_focused_block()
+            if self.toggleLabel:
+                self.draw_label()
 
     def draw_focused_block(self):
         """ Draw black edges around the block that is currently under the
@@ -544,6 +543,7 @@ class GameScene(Scene):
             x, y, z = block
             self.highlight.vertices[:] = cube_vertices(x, y, z, 0.51)
         else:
+            # Make invisible by setting all vertices to 0
             self.highlight.vertices[:] = [0] * 72
 
     def draw_label(self):
@@ -763,7 +763,6 @@ class Model(object):
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
-        # texture_data = list(texture)
         # create vertex list
         # FIXME Maybe `add_indexed()` should be used instead
         self._shown[position] = self.batch.add(24, GL_QUADS, self.group,
