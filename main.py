@@ -34,22 +34,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyglet
 
-from pyglet.gl import *
 from game.graphics import *
 from game.scenemanager import SceneManager
 
 
 def main():
-    # The pyglet.resource module handles efficient loading of media.
-    pyglet.resource.path = ['img']
+    # The pyglet.resource module handles efficient loading of media:
+    pyglet.resource.path = ['assets', 'assets/images']
     pyglet.resource.reindex()
 
+    # Create the main game Window, and set it's icon:
     config = Config(alpha_size=ALPHA_SIZE, double_buffer=DOUBLE_BUFFER)
     window = pyglet.window.Window(width=WIDTH, height=HEIGHT, caption=TITLE,
                                   resizable=RESIZABLE, fullscreen=FULLSCREEN, vsync=VSYNC)
-    # Hide the mouse cursor and prevent the mouse from leaving the window.
+    window.set_icon(pyglet.resource.image('icon.png'))
+
+    # Create an instance of the SceneManager, and schedule it to update:
     scene_manager = SceneManager(window=window)
     pyglet.clock.schedule_interval(scene_manager.update, 1.0 / TICKS_PER_SEC)
+
+    # Setup some OpenGL settings (from game.graphics), and start the game loop:
     setup_opengl()
     pyglet.app.run()
 
