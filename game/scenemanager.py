@@ -31,6 +31,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from .savemanager import SaveManager
 from .scenes import *
 
 
@@ -39,9 +40,15 @@ class SceneManager:
     def __init__(self, window):
         self.window = window
 
+        # Save data is accessible from all Scenes
+        self.save = SaveManager()
+
         # A dictionary of available Scenes
         self.scenes = {}
         self.current_scene = None
+
+        # All Scenes will have a reference to the manager
+        Scene.scene_manager = self
 
         # Add the defaults Scenes to the manager
         self.add_scene(MenuScene(self.window))
@@ -55,7 +62,6 @@ class SceneManager:
 
         :param scene_instance: An instace of a `Scene`.
         """
-        scene_instance.scene_manager = self
         self.scenes[scene_instance.__class__.__name__] = scene_instance
 
     def change_scene(self, scene_name):
