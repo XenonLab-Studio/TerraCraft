@@ -883,8 +883,12 @@ class HelpScene(Scene):
                              "* Press keys 1 through 0 to choose block type",
                              "* Press F2 key to hide block selection",
                              "* Press F3 key to hide debug stats"]
-        self.spacing = 60
 
+        self.return_label = pyglet.text.Label("Press any key to return to game", font_size=25,
+                                              x=self.window.width // 2, y=20, anchor_x='center',
+                                              color=(0, 50, 50, 255), batch=self.batch)
+
+        self.spacing = 60
         y_position = self.window.height - self.spacing
 
         for string in self.text_strings:
