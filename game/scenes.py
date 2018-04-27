@@ -461,8 +461,10 @@ class GameScene(Scene):
         elif symbol == key.TAB:
             self.flying = not self.flying
         elif symbol == key.F1:
-            self.toggleGui = not self.toggleGui
+            self.scene_manager.change_scene("HelpScene")
         elif symbol == key.F2:
+            self.toggleGui = not self.toggleGui
+        elif symbol == key.F3:
             self.toggleLabel = not self.toggleLabel
         elif symbol == key.F5:
             self.model.save_manager.save_world(self.model)
@@ -868,3 +870,43 @@ class Model(object):
         """
         while self.queue:
             self._dequeue()
+
+
+class HelpScene(Scene):
+    def __init__(self, window):
+        self.window = window
+        self.batch = pyglet.graphics.Batch()
+
+        self.labels = []
+        self.text_strings = ["* Left click mouse to destroy block",
+                             "* Right click mouse to create block",
+                             "* Press keys 1 through 0 to choose block type",
+                             "* Press F2 key to hide block selection",
+                             "* Press F3 key to hide debug stats"]
+        self.spacing = 60
+
+        y_position = self.window.height - self.spacing
+
+        for string in self.text_strings:
+            self.labels.append(pyglet.text.Label(string, font_size=22, x=40, y=y_position,
+                                                 color=(0, 50, 50, 255), batch=self.batch))
+            y_position -= self.spacing
+
+        self.on_resize(*self.window.get_size())
+
+    def on_resize(self, width, height):
+        y_position = height - self.spacing
+        for label in self.labels:
+            label.y = y_position
+            y_position -= self.spacing
+
+    def update(self, dt):
+        pass
+
+    def on_key_press(self, symbol, modifiers):
+        self.scene_manager.change_scene("GameScene")
+        return pyglet.event.EVENT_HANDLED
+
+    def on_draw(self):
+        self.window.clear()
+        self.batch.draw()

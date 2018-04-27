@@ -45,7 +45,9 @@ class SceneManager:
 
         # Add the defaults Scenes to the manager
         self.add_scene(MenuScene(self.window))
+        self.add_scene(HelpScene(self.window))
         self.add_scene(GameScene(self.window))
+        # Activate the Menu Scene
         self.change_scene("MenuScene")
 
     def add_scene(self, scene_instance):
@@ -57,11 +59,11 @@ class SceneManager:
         self.scenes[scene_instance.__class__.__name__] = scene_instance
 
     def change_scene(self, scene_name):
-        """Change to a specific Scene, by name.
+        """Change to a specific Scene, by it's class name.
 
-        When changing to a new Scene, any event handlers that are
-        defined will be activated. Any handlers on the current
-        Scene will be removed.
+        When changing to a new Scene, any Window event handlers that
+        are defined on the new Scene will be added. Any handlers on
+        the previously active Scene will be removed.
 
         :param scene_name: A `str` of the desired Scene class name.
         """
