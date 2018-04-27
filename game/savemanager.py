@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pyglet
 import pickle
+import json
 import os
 
 from time import gmtime, strftime
@@ -40,11 +41,23 @@ from time import gmtime, strftime
 
 class SaveManager(object):
     def __init__(self):
-        """SaveManager handles the saving and loading of worlds."""
+        """SaveManager handles saving/loading of worlds and options.
 
-        # Get the standard save path for the OS:
+        An internal dictionary (self._data) holds persistent data
+        such as options, inventory, etc. To make accessing this easier,
+        the "magic methods" `__getitem__` and `__setitem__` are used to
+        add dictionary-like behavior to `SaveManager`.
+        """
+
+        # Get the appropriate OS specific save path:
         self.save_path = pyglet.resource.get_settings_path('TerraCraft')
-        self.save_file = 'saveworld.dat'
+        self.save_file = 'saveworld{}.dat'
+        self.config_file = 'config.json'
+        self.save_slot = 0
+
+        self._data = {'revision': 0,
+                      'options': {},
+                      'inventory': {}}
 
     @staticmethod
     def timestamp_print(txt):
@@ -52,10 +65,12 @@ class SaveManager(object):
 
     def has_save_game(self):
         """Returns True if the save path and file exist."""
-        return os.path.exists(os.path.join(self.save_path, self.save_file))
+        save_file = self.save_file.format(self.save_slot)
+        return os.path.exists(os.path.join(self.save_path, save_file))
 
     def load_world(self, model):
-        save_file_path = os.path.join(self.save_path, self.save_file)
+        save_file = self.save_file.format(self.save_slot)
+        save_file_path = os.path.join(self.save_path, save_file)
         self.timestamp_print('start loading...')
 
         try:
@@ -75,7 +90,8 @@ class SaveManager(object):
             return False
 
     def save_world(self, model):
-        save_file_path = os.path.join(self.save_path, self.save_file)
+        save_file = self.save_file.format(self.save_slot)
+        save_file_path = os.path.join(self.save_path, save_file)
         self.timestamp_print('start saving...')
 
         # If the save directory doesn't exist, create it
@@ -88,3 +104,15 @@ class SaveManager(object):
             pickle.dump(model.world, file)
 
         self.timestamp_print('saving completed')
+
+    def __getitem__(self, item):
+        return self._data.get(item)
+
+    def __setitem__(self, key, item):
+        self._data[key] = item
+
+    def get(self, item, default):
+        return self._data.get(item, default)
+
+    def keys(self):
+        return self._data.keys()

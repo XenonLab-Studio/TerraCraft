@@ -45,7 +45,6 @@ from pyglet.graphics import OrderedGroup
 from .blocks import *
 from .utilities import *
 from .graphics import BlockGroup
-from .savemanager import SaveManager
 
 
 class Scene:
@@ -76,20 +75,54 @@ class MenuScene(Scene):
         position = self.window.width // 2, self.window.height
         self.title_graphic = Sprite(img=title_image, x=position[0], y=position[1], batch=self.batch)
 
-        self.start_label = pyglet.text.Label('Press Enter key to start', font_size=25,
+        self.start_label = pyglet.text.Label('Select save & press Enter to start', font_size=25,
                                              x=self.window.width // 2, y=self.window.height // 2,
                                              anchor_x='center', anchor_y='center', batch=self.batch)
 
+        # Create labels for three save slots:
+        self.save_slot_labels = []
+        for save_slot in [1, 2, 3]:
+            self.scene_manager.save.save_slot = save_slot
+            # indicate if an existing save exists
+            if self.scene_manager.save.has_save_game():
+                label_text = f"{save_slot}:  load"
+            else:
+                label_text = f"{save_slot}:  new game"
+            y_pos = 190 - 50 * save_slot
+            label = pyglet.text.Label(label_text, font_size=20, x=40, y=y_pos, batch=self.batch)
+            self.save_slot_labels.append(label)
+
+        # Highlight the default save slot
+        self.scene_manager.save.save_slot = 1
+        self._highlight_save_slot()
+
     def update(self, dt):
         pass
+
+    def _highlight_save_slot(self):
+        # First reset all labels to white
+        for label in self.save_slot_labels:
+            label.color = 255, 255, 255, 255
+        # Highlight the selected slot
+        index = self.scene_manager.save.save_slot - 1
+        self.save_slot_labels[index].color = 50, 50, 50, 255
 
     def on_key_press(self, symbol, modifiers):
         """Event handler for the Window.on_key_press event."""
         if symbol == key.ENTER:
             self.scene_manager.change_scene('GameScene')
-        if symbol == key.ESCAPE:
+        elif symbol == key.ESCAPE:
             self.window.set_exclusive_mouse(False)
             return pyglet.event.EVENT_HANDLED
+
+        if symbol in (key._1, key._2, key._3):
+            if symbol == key._1:
+                self.scene_manager.save.save_slot = 1
+            elif symbol == key._2:
+                self.scene_manager.save.save_slot = 2
+            elif symbol == key._3:
+                self.scene_manager.save.save_slot = 3
+            self._highlight_save_slot()
 
     def on_mouse_press(self, x, y, button, modifiers):
         """Event handler for the Window.on_resize event."""
@@ -271,8 +304,16 @@ class GameScene(Scene):
 
         """
         if not self.initialized:
-            self.model.initialize()
             self.set_exclusive_mouse(True)
+
+            has_save = False
+            if self.scene_manager.save.has_save_game():
+                # Returns False if unable to load the save
+                has_save = self.scene_manager.save.load_world(self.model)
+
+            if not has_save:
+                self.model.generate_world()
+
             self.initialized = True
 
         self.model.process_queue()
@@ -467,7 +508,7 @@ class GameScene(Scene):
         elif symbol == key.F3:
             self.toggleLabel = not self.toggleLabel
         elif symbol == key.F5:
-            self.model.save_manager.save_world(self.model)
+            self.scene_manager.save.save_world(self.model)
         elif symbol == key.F12:
             pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot.png')
         elif symbol in self.num_keys:
@@ -582,59 +623,44 @@ class Model(object):
         # _show_block() and _hide_block() calls
         self.queue = deque()
 
-        # A module to save and load the world
-        self.save_manager = SaveManager()
-
     @property
     def currently_shown(self):
         return len(self._shown)
 
-    def initialize(self):
-        """ Initialize the world by placing all the blocks.
+    def generate_world(self):
+        """Randomly generate a new world and place all the blocks"""
+        n = 80  # 1/2 width and height of world
+        s = 1  # step size
+        y = 0  # initial y height
+        for x in range(-n, n + 1, s):
+            for z in range(-n, n + 1, s):
+                # create a layer stone an DIRT_WITH_GRASS everywhere.
+                self.add_block((x, y - 2, z), DIRT_WITH_GRASS, immediate=True)
+                self.add_block((x, y - 3, z), BEDSTONE, immediate=False)
+                if x in (-n, n) or z in (-n, n):
+                    # create outer walls.
+                    for dy in range(-2, 3):
+                        self.add_block((x, y + dy, z), BEDSTONE, immediate=False)
 
-        Blocks will be loaded from save if available.
-        Otherwise, a new map will be generated.
-
-        """
-        if self.save_manager.has_save_game():
-            # Returns False if unable to load the save
-            has_save = self.save_manager.load_world(self)
-        else:
-            has_save = False
-
-        if not has_save:
-            n = 80  # 1/2 width and height of world
-            s = 1  # step size
-            y = 0  # initial y height
-            for x in range(-n, n + 1, s):
-                for z in range(-n, n + 1, s):
-                    # create a layer stone an DIRT_WITH_GRASS everywhere.
-                    self.add_block((x, y - 2, z), DIRT_WITH_GRASS, immediate=True)
-                    self.add_block((x, y - 3, z), BEDSTONE, immediate=False)
-                    if x in (-n, n) or z in (-n, n):
-                        # create outer walls.
-                        for dy in range(-2, 3):
-                            self.add_block((x, y + dy, z), BEDSTONE, immediate=False)
-
-            # generate the hills randomly
-            o = n - 10
-            for _ in range(120):
-                a = random.randint(-o, o)  # x position of the hill
-                b = random.randint(-o, o)  # z position of the hill
-                c = -1  # base of the hill
-                h = random.randint(1, 6)  # height of the hill
-                s = random.randint(4, 8)  # 2 * s is the side length of the hill
-                d = 1  # how quickly to taper off the hills
-                block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
-                for y in range(c, c + h):
-                    for x in range(a - s, a + s + 1):
-                        for z in range(b - s, b + s + 1):
-                            if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
-                                continue
-                            if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
-                                continue
-                            self.add_block((x, y, z), block, immediate=False)
-                    s -= d  # decrement side lenth so hills taper off
+        # generate the hills randomly
+        o = n - 10
+        for _ in range(120):
+            a = random.randint(-o, o)  # x position of the hill
+            b = random.randint(-o, o)  # z position of the hill
+            c = -1  # base of the hill
+            h = random.randint(1, 6)  # height of the hill
+            s = random.randint(4, 8)  # 2 * s is the side length of the hill
+            d = 1  # how quickly to taper off the hills
+            block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
+            for y in range(c, c + h):
+                for x in range(a - s, a + s + 1):
+                    for z in range(b - s, b + s + 1):
+                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
+                            continue
+                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
+                            continue
+                        self.add_block((x, y, z), block, immediate=False)
+                s -= d  # decrement side lenth so hills taper off
 
     def hit_test(self, position, vector, max_distance=NODE_SELECTOR):
         """ Line of sight search from current position. If a block is
