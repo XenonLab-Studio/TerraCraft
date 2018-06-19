@@ -484,6 +484,7 @@ class GameScene(Scene):
                 texture = self.model.world[block]
                 if texture != BEDSTONE:
                     self.model.remove_block(block)
+                    self.audio.play(self.destroy_sfx)
         else:
             self.set_exclusive_mouse(True)
 
