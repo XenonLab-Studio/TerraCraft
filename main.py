@@ -39,8 +39,8 @@ from game.scenemanager import SceneManager
 
 
 def main():
-    # The pyglet.resource module handles efficient loading of media:
-    pyglet.resource.path = ['assets', 'assets/images']
+    # The pyglet.resource module handles efficient loading of assets:
+    pyglet.resource.path = ['assets', 'assets/images', 'assets/sounds']
     pyglet.resource.reindex()
 
     # Create the main game Window, and set it's icon:
