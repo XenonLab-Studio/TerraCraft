@@ -140,6 +140,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <p align="center"><b>This software is licensed under the GPL3 license.</b>
 
-<p align="center"><img src="img/gpl3_logo.png" width="300" >
+<p align="center"><img src="assets/images/gpl3_logo.png" width="300" >
 
 <p align="center"><i>Find a copy of the full license within this project (LICENSE).</i>
