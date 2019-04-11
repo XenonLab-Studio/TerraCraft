@@ -120,7 +120,7 @@ See the [wiki](https://github.com/XenonCoder/terracraft/wiki) for this project t
 Copyright (C) 2013 Michael Fogleman<br>
 Copyright (C) 2018 Stefano Peris<br>
 
-eMail: <xenon77.dev@gmail.com><br>
+eMail: <xenonlab.develop@gmail.com><br>
 Github repository: <https://github.com/XenonCoder/TerraCraft>
 
 This program is free software: you can redistribute it and/or modify
