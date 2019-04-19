@@ -13,7 +13,7 @@
 
 
 Copyright (C) 2013 Michael Fogleman
-Copyright (C) 2018 Stefano Peris <xenonlab.develop@gmail.com>
+Copyright (C) 2018/2019 Stefano Peris <xenonlab.develop@gmail.com>
 
 Github repository: <https://github.com/XenonLab-Studio/TerraCraft>
 
