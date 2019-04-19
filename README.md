@@ -102,12 +102,6 @@ See the [wiki](https://github.com/XenonLab-Studio/TerraCraft/wiki) for this proj
     - 0: Wooden_Planks
     - Mouse left-click: remove block
     - Mouse right-click: create block
-    
-### Functions
-
-- F1: toggles reticle, block highlight, and fps counter.
-- F2: toggles just the fps counter.
-- F5: Saving progress. The map is automatically loaded.
 
 **Warning! By pressing F12, the previous screenshot is automatically overwritten.**
 
