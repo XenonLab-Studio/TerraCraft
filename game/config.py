@@ -13,9 +13,9 @@
 
 
 Copyright (C) 2013 Michael Fogleman
-Copyright (C) 2018 Stefano Peris <xenon77.dev@gmail.com>
+Copyright (C) 2018 Stefano Peris <xenonlab.develop@gmail.com>
 
-Github repository: <https://github.com/XenonCoder/Terracraft>
+Github repository: <https://github.com/XenonLab-Studio/TerraCraft>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
