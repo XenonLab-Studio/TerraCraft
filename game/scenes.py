@@ -690,7 +690,7 @@ class Model(object):
                 self.add_block((x, y - 3, z), BEDSTONE, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
-                    for dy in range(-2, 3):
+                    for dy in range(-2, 9): # Setting values for the Bedrock (depth, and height of the perimeter wall).
                         self.add_block((x, y + dy, z), BEDSTONE, immediate=False)
 
         # generate the hills randomly
