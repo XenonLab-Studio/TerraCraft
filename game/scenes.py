@@ -955,7 +955,8 @@ class HelpScene(Scene):
         self.batch = pyglet.graphics.Batch()
 
         self.labels = []
-        self.text_strings = ["* Left click mouse to destroy block",
+        self.text_strings = ["  GAME OPTIONS",
+                             "* Left click mouse to destroy block",
                              "* Right click mouse to create block",
                              "* Press keys 1 through 0 to choose block type",
                              "* Press F2 key to hide block selection",
