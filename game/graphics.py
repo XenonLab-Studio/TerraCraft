@@ -96,7 +96,7 @@ class BlockGroup(OrderedGroup):
         glBindTexture(self.texture.target, self.texture.id)
 
         glColor3d(1, 1, 1)
-        width, height = self.window.get_size()
+        width, height = self.window.get_framebuffer_size()
         glEnable(GL_DEPTH_TEST)
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
@@ -113,12 +113,12 @@ class BlockGroup(OrderedGroup):
     def unset_state(self):
         # Set a 2D projection when finished.
         glDisable(self.texture.target)
-        width, height = self.window.get_size()
+        width, height = self.window.get_framebuffer_size()
         glDisable(GL_DEPTH_TEST)
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(0, width, 0, height, -1, 1)
+        glOrtho(0, self.window.width, 0, self.window.height, -1, 1)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
