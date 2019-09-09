@@ -74,8 +74,7 @@ class SceneManager:
 
         :param scene_name: A `str` of the desired Scene class name.
         """
-        assert scene_name in self.scenes, "Requested scene not found: {}".format(
-            scene_name)
+        assert scene_name in self.scenes, "Requested scene not found: {}".format(scene_name)
         if self.current_scene:
             self.window.remove_handlers(self.current_scene)
         self.current_scene = self.scenes[scene_name]
