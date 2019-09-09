@@ -37,6 +37,7 @@ from .scenes import *
 
 class SceneManager:
     """A class to handle switching between Scenes instances."""
+
     def __init__(self, window):
         self.window = window
 

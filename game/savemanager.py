@@ -96,7 +96,8 @@ class SaveManager(object):
 
         # If the save directory doesn't exist, create it
         if not os.path.exists(self.save_path):
-            self.timestamp_print('creating directory: {}'.format(self.save_path))
+            self.timestamp_print(
+                'creating directory: {}'.format(self.save_path))
             os.mkdir(self.save_path)
 
         # Efficiently save the world to a binary file
