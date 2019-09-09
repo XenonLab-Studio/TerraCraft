@@ -68,7 +68,6 @@ class Block:
         self.name = name
         self.tex_coords = tex_coords
 
-
 DIRT = Block('dirt', _tex_coords((0, 1), (0, 1), (0, 1)))
 DIRT_WITH_GRASS = Block('dirt_with_grass', _tex_coords((1, 0), (0, 1), (0, 0)))
 SAND = Block('sand', _tex_coords((1, 1), (1, 1), (1, 1)))

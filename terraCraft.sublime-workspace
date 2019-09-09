@@ -1,0 +1,384 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"gener",
+				"generate_world"
+			],
+			[
+				"remove",
+				"remove_block"
+			],
+			[
+				"w",
+				"world"
+			],
+			[
+				"mov",
+				"move_block"
+			]
+		]
+	},
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"latex",
+				"Set Syntax: LaTeX"
+			],
+			[
+				"fold",
+				"Code Folding: Fold Tag Attributes"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 240.0,
+		"history":
+		[
+			"ls"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": true,
+		"show_open_files": true,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": true
+	},
+	"file_history":
+	[
+		"/home/trevor/glumpy/test.py",
+		"/home/trevor/Documents/thesis/main.bbl",
+		"/home/trevor/Desktop/springSummer2019/DataAnalysis/assignments/a6/main.tex",
+		"/home/trevor/.minetest/worlds/NoWorld/map_meta.txt",
+		"/home/trevor/Documents/thesis/main.tex",
+		"/home/trevor/Documents/thesis/chapter1.tex",
+		"/home/trevor/Documents/thesis/chapter2.tex",
+		"/home/trevor/Documents/thesis/chapter5.tex",
+		"/home/trevor/Documents/thesis/chapter6.tex",
+		"/home/trevor/Documents/thesis/chapter4.tex",
+		"/home/trevor/Documents/thesis/chapter3.tex",
+		"/home/trevor/.minetest/worlds/NoWorld/env_meta.txt",
+		"/home/trevor/Documents/thesis/thesis.bib",
+		"/home/trevor/Documents/thesis/glossary.tex",
+		"/home/trevor/Documents/thesis/appendixA.tex",
+		"/home/trevor/Documents/thesis/urthesis.sty",
+		"/home/trevor/Documents/thesis/preamble.tex",
+		"/home/trevor/Documents/thesis/appendixB.tex",
+		"/home/trevor/Documents/thesis/dedication.tex",
+		"/home/trevor/Documents/thesis/acknowledgements.tex",
+		"/home/trevor/Documents/thesis/abstract.tex",
+		"/home/trevor/Documents/thesis/library.bib",
+		"/home/trevor/Documents/thesis/chapter2.aux",
+		"/home/trevor/Documents/thesis/title.tex",
+		"/home/trevor/Documents/thesis/thesisStatement.txt",
+		"/home/trevor/Documents/thesis/thesis.tex",
+		"/home/trevor/Documents/thesis/cSysts.tex",
+		"/home/trevor/setup.sh",
+		"/home/trevor/commands.txt",
+		"/home/trevor/core",
+		"/etc/hosts",
+		"/etc/hosts.deny",
+		"/home/trevor/Desktop/test.txt",
+		"/home/trevor/.config/i3status/config",
+		"/home/trevor/.config/i3/config",
+		"/etc/i3status.conf",
+		"/home/trevor/Desktop/SpringSummer2019/DataAnalysis/assignments/a2/main.tex",
+		"/home/trevor/.config/i3status.conf",
+		"/home/trevor/Desktop/SpringSummer2019/DataAnalysis/assignments/a2/main."
+	],
+	"find":
+	{
+		"height": 60.0
+	},
+	"find_in_files":
+	{
+		"height": 358.0,
+		"where_history":
+		[
+			"",
+			"thesis"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"blocks.",
+			"model",
+			"time.",
+			"globt",
+			"time",
+			"globt",
+			"dt",
+			"UPDATE",
+			"TICK",
+			"DT",
+			"remove",
+			"REMOVE",
+			"tick",
+			"DIRT_WITH_GRASS",
+			"update",
+			"dirt",
+			"grass",
+			"tick",
+			"click",
+			"add_block",
+			"dt",
+			"tick",
+			"move",
+			"tick",
+			"self.posi",
+			"player",
+			"position",
+			"player",
+			"self.position",
+			"click",
+			"position",
+			"add",
+			"player",
+			"dt",
+			"player",
+			"GRAVITY",
+			"gravity",
+			"config",
+			"move_block",
+			"move",
+			"add",
+			"current_scene",
+			"player",
+			"place",
+			"model",
+			"tran",
+			"assignment policy",
+			"late",
+			"LaTe",
+			"Arduino.",
+			"Arduino",
+			"Makers",
+			"volume",
+			"issue",
+			"Els",
+			"new york",
+			"location",
+			"wolfgang",
+			"cybernetics",
+			"the concept",
+			"means of",
+			"Von",
+			"von",
+			"post",
+			"pose",
+			"agarwal",
+			"pages",
+			"\\",
+			"cite",
+			" \\",
+			"igoe",
+			"osul",
+			"\\n",
+			"\\r",
+			"\" \"",
+			"modules",
+			"general",
+			"luhma",
+			"patent",
+			"Hermann",
+			"Hartmann",
+			".,",
+			"C.P",
+			"Handbook of ",
+			"SENSORS",
+			"James F Allen",
+			"engineering",
+			"Christia",
+			"Bulow",
+			"klir",
+			"Klir",
+			"Garnet",
+			"Barraga",
+			"Hernando Barra",
+			"Hernando Barragán",
+			"–",
+			"Searching",
+			"–",
+			"fig:entire",
+			"human",
+			"section",
+			"the the",
+			"may",
+			"piezzo",
+			"Figure",
+			"0.8",
+			"0.5",
+			"0.",
+			"assumed",
+			"arguably",
+			"chapter",
+			"Gerhard",
+			"dissertation",
+			"thesis",
+			"dissertation",
+			"thesis",
+			"hobbyist",
+			"figure",
+			"General",
+			"Maker",
+			"\\textit",
+			"General",
+			"Maker",
+			"/",
+			"fig",
+			"figure",
+			"\\textit",
+			"/"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"von",
+			"--",
+			"piezo",
+			"0.6",
+			"0.8",
+			"Chapter",
+			"thesis",
+			"\\emph",
+			"or",
+			"general systems theory",
+			"\\emph",
+			"and",
+			"\\emph",
+			"",
+			"and",
+			"Figure",
+			"\\emph",
+			"micro-controller",
+			"maker movement",
+			"general systems theory",
+			"\\section*",
+			"systems engineering",
+			"general systems theory"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"incremental_find":
+	{
+		"height": 122.0
+	},
+	"input":
+	{
+		"height": 122.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 229.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 229.0
+	},
+	"pinned_build_system": "",
+	"replace":
+	{
+		"height": 240.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/.minetest/worlds/NoWorld/minetest.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 218.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

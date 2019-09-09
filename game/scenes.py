@@ -46,6 +46,7 @@ from pyglet.graphics import OrderedGroup
 from .blocks import *
 from .utilities import *
 from .graphics import BlockGroup
+from .generate_world import *
 
 
 class AudioEngine:
@@ -89,8 +90,6 @@ class AudioEngine:
             self.music_player.play()
         else:
             self.music_player.next_source()
-
-
 class Scene:
     """A base class for all Scenes to inherit from.
 
@@ -106,8 +105,6 @@ class Scene:
 
     def update(self, dt):
         raise NotImplementedError
-
-
 class MenuScene(Scene):
     def __init__(self, window):
         self.window = window
@@ -184,8 +181,6 @@ class MenuScene(Scene):
         """Event handler for the Window.on_draw event."""
         self.window.clear()
         self.batch.draw()
-
-
 class GameScene(Scene):
     def __init__(self, window):
         self.window = window
@@ -408,6 +403,8 @@ class GameScene(Scene):
         y = max(-1.25, y)
         self.position = (x, y, z)
 
+
+
     def collide(self, position, height):
         """ Checks to see if the player at the given `position` and `height`
         is colliding with any blocks in the world.
@@ -487,6 +484,7 @@ class GameScene(Scene):
                     self.audio.play(self.destroy_sfx)
         else:
             self.set_exclusive_mouse(True)
+        print(self.position)
 
     def on_mouse_motion(self, x, y, dx, dy):
         """Event handler for the Window.on_mouse_motion event.
@@ -683,6 +681,8 @@ class Model(object):
         n = 80  # 1/2 width and height of world
         s = 1  # step size
         y = 0  # initial y height
+
+
         for x in range(-n, n + 1, s):
             for z in range(-n, n + 1, s):
                 # create a layer stone an DIRT_WITH_GRASS everywhere.
@@ -694,24 +694,26 @@ class Model(object):
                         self.add_block((x, y + dy, z), BEDSTONE, immediate=False)
 
         # generate the hills randomly
-        o = n - 10
-        for _ in range(120):
-            a = random.randint(-o, o)  # x position of the hill
-            b = random.randint(-o, o)  # z position of the hill
-            c = -1  # base of the hill
-            h = random.randint(1, 6)  # height of the hill
-            s = random.randint(4, 8)  # 2 * s is the side length of the hill
-            d = 1  # how quickly to taper off the hills
-            block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
-            for y in range(c, c + h):
-                for x in range(a - s, a + s + 1):
-                    for z in range(b - s, b + s + 1):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
-                            continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
-                            continue
-                        self.add_block((x, y, z), block, immediate=False)
-                s -= d  # decrement side lenth so hills taper off
+
+        if HILLSON is True:
+            o = n - 10
+            for _ in range(120):
+                a = random.randint(-o, o)  # x position of the hill
+                b = random.randint(-o, o)  # z position of the hill
+                c = -1  # base of the hill
+                h = random.randint(1, 6)  # height of the hill
+                s = random.randint(4, 8)  # 2 * s is the side length of the hill
+                d = 1  # how quickly to taper off the hills
+                block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
+                for y in range(c, c + h):
+                    for x in range(a - s, a + s + 1):
+                        for z in range(b - s, b + s + 1):
+                            if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
+                                continue
+                            if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
+                                continue
+                            self.add_block((x, y, z), block, immediate=False)
+                    s -= d  # decrement side lenth so hills taper off
 
     def hit_test(self, position, vector, max_distance=NODE_SELECTOR):
         """ Line of sight search from current position. If a block is

@@ -92,3 +92,6 @@ JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
 
 # Terminal velocity
 TERMINAL_VELOCITY = 50
+
+# Generate Hills? 
+HILLSON = True
