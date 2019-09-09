@@ -83,6 +83,7 @@ class BlockGroup(OrderedGroup):
     any objects that are assigned to it. When finished,
     it will reset to a default 2D projection.
     """
+
     def __init__(self, window, texture, order=0):
         super().__init__(order=order)
         self.window = window

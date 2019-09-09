@@ -46,13 +46,14 @@ from pyglet.graphics import OrderedGroup
 from .blocks import *
 from .utilities import *
 from .graphics import BlockGroup
-from .generate_world import *
 
 
 class AudioEngine:
     """A high level audio engine for easily playing SFX and Music."""
+
     def __init__(self, channels=5):
-        self.sfx_players = deque([Player() for _ in range(channels)], maxlen=channels)
+        self.sfx_players = deque([Player()
+                                  for _ in range(channels)], maxlen=channels)
         self.music_player = Player()
 
     def set_volume(self, percentage):
@@ -90,6 +91,8 @@ class AudioEngine:
             self.music_player.play()
         else:
             self.music_player.next_source()
+
+
 class Scene:
     """A base class for all Scenes to inherit from.
 
@@ -105,6 +108,8 @@ class Scene:
 
     def update(self, dt):
         raise NotImplementedError
+
+
 class MenuScene(Scene):
     def __init__(self, window):
         self.window = window
@@ -115,7 +120,8 @@ class MenuScene(Scene):
         title_image.anchor_x = title_image.width // 2
         title_image.anchor_y = title_image.height + 10
         position = self.window.width // 2, self.window.height
-        self.title_graphic = Sprite(img=title_image, x=position[0], y=position[1], batch=self.batch)
+        self.title_graphic = Sprite(
+            img=title_image, x=position[0], y=position[1], batch=self.batch)
 
         self.start_label = pyglet.text.Label('Select save & press Enter to start', font_size=25,
                                              x=self.window.width // 2, y=self.window.height // 2,
@@ -131,7 +137,8 @@ class MenuScene(Scene):
             else:
                 label_text = f"{save_slot}:  new game"
             y_pos = 190 - 50 * save_slot
-            label = pyglet.text.Label(label_text, font_size=20, x=40, y=y_pos, batch=self.batch)
+            label = pyglet.text.Label(
+                label_text, font_size=20, x=40, y=y_pos, batch=self.batch)
             self.save_slot_labels.append(label)
 
         # Highlight the default save slot
@@ -181,6 +188,8 @@ class MenuScene(Scene):
         """Event handler for the Window.on_draw event."""
         self.window.clear()
         self.batch.draw()
+
+
 class GameScene(Scene):
     def __init__(self, window):
         self.window = window
@@ -189,7 +198,8 @@ class GameScene(Scene):
         self.batch = pyglet.graphics.Batch()
 
         # pyglet Groups manages setting/unsetting OpenGL state.
-        self.block_group = BlockGroup(self.window, pyglet.resource.texture('textures.png'), order=0)
+        self.block_group = BlockGroup(
+            self.window, pyglet.resource.texture('textures.png'), order=0)
         self.hud_group = OrderedGroup(order=1)
 
         # Whether or not the window exclusively captures the mouse.
@@ -248,10 +258,12 @@ class GameScene(Scene):
         self.model = Model(batch=self.batch, group=self.block_group)
 
         # The crosshairs at the center of the screen.
-        self.reticle = self.batch.add(4, GL_LINES, self.hud_group, 'v2i', ('c3B', [0]*12))
+        self.reticle = self.batch.add(
+            4, GL_LINES, self.hud_group, 'v2i', ('c3B', [0]*12))
 
         # The highlight around focused block.
-        indices = [0, 1, 1, 2, 2, 3, 3, 0, 4, 7, 7, 6, 6, 5, 5, 4, 0, 4, 1, 7, 2, 6, 3, 5]
+        indices = [0, 1, 1, 2, 2, 3, 3, 0, 4, 7, 7,
+                   6, 6, 5, 5, 4, 0, 4, 1, 7, 2, 6, 3, 5]
         self.highlight = self.batch.add_indexed(24, GL_LINES, self.block_group, indices,
                                                 'v3f/dynamic', ('c3B', [0]*72))
 
@@ -403,8 +415,6 @@ class GameScene(Scene):
         y = max(-1.25, y)
         self.position = (x, y, z)
 
-
-
     def collide(self, position, height):
         """ Checks to see if the player at the given `position` and `height`
         is colliding with any blocks in the world.
@@ -484,7 +494,6 @@ class GameScene(Scene):
                     self.audio.play(self.destroy_sfx)
         else:
             self.set_exclusive_mouse(True)
-        print(self.position)
 
     def on_mouse_motion(self, x, y, dx, dy):
         """Event handler for the Window.on_mouse_motion event.
@@ -546,8 +555,8 @@ class GameScene(Scene):
             elif self.dy == 0:
                 self.dy = JUMP_SPEED
         elif symbol == key.ESCAPE:
-                self.set_exclusive_mouse(False)
-                return pyglet.event.EVENT_HANDLED
+            self.set_exclusive_mouse(False)
+            return pyglet.event.EVENT_HANDLED
         elif symbol == key.TAB:
             self.flying = not self.flying
         elif symbol == key.F1:
@@ -682,7 +691,6 @@ class Model(object):
         s = 1  # step size
         y = 0  # initial y height
 
-
         for x in range(-n, n + 1, s):
             for z in range(-n, n + 1, s):
                 # create a layer stone an DIRT_WITH_GRASS everywhere.
@@ -690,30 +698,34 @@ class Model(object):
                 self.add_block((x, y - 3, z), BEDSTONE, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
-                    for dy in range(-2, 9): # Setting values for the Bedrock (depth, and height of the perimeter wall).
-                        self.add_block((x, y + dy, z), BEDSTONE, immediate=False)
+                    # Setting values for the Bedrock (depth, and height of the perimeter wall).
+                    for dy in range(-2, 9):
+                        self.add_block((x, y + dy, z), BEDSTONE,
+                                       immediate=False)
 
         # generate the hills randomly
 
-        if HILLSON is True:
-            o = n - 10
-            for _ in range(120):
-                a = random.randint(-o, o)  # x position of the hill
-                b = random.randint(-o, o)  # z position of the hill
-                c = -1  # base of the hill
-                h = random.randint(1, 6)  # height of the hill
-                s = random.randint(4, 8)  # 2 * s is the side length of the hill
-                d = 1  # how quickly to taper off the hills
-                block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
-                for y in range(c, c + h):
-                    for x in range(a - s, a + s + 1):
-                        for z in range(b - s, b + s + 1):
-                            if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
-                                continue
-                            if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
-                                continue
-                            self.add_block((x, y, z), block, immediate=False)
-                    s -= d  # decrement side lenth so hills taper off
+        if not HILLS_ON:
+            return
+
+        o = n - 10
+        for _ in range(120):
+            a = random.randint(-o, o)  # x position of the hill
+            b = random.randint(-o, o)  # z position of the hill
+            c = -1  # base of the hill
+            h = random.randint(1, 6)  # height of the hill
+            s = random.randint(4, 8)  # 2 * s is the side length of the hill
+            d = 1  # how quickly to taper off the hills
+            block = random.choice([DIRT_WITH_GRASS, SNOW, SAND])
+            for y in range(c, c + h):
+                for x in range(a - s, a + s + 1):
+                    for z in range(b - s, b + s + 1):
+                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
+                            continue
+                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:  # 6 = flat map
+                            continue
+                        self.add_block((x, y, z), block, immediate=False)
+                s -= d  # decrement side lenth so hills taper off
 
     def hit_test(self, position, vector, max_distance=NODE_SELECTOR):
         """ Line of sight search from current position. If a block is

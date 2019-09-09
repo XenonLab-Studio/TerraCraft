@@ -37,6 +37,7 @@ from .scenes import *
 
 class SceneManager:
     """A class to handle switching between Scenes instances."""
+
     def __init__(self, window):
         self.window = window
 
@@ -73,7 +74,8 @@ class SceneManager:
 
         :param scene_name: A `str` of the desired Scene class name.
         """
-        assert scene_name in self.scenes, "Requested scene not found: {}".format(scene_name)
+        assert scene_name in self.scenes, "Requested scene not found: {}".format(
+            scene_name)
         if self.current_scene:
             self.window.remove_handlers(self.current_scene)
         self.current_scene = self.scenes[scene_name]
