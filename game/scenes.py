@@ -46,7 +46,8 @@ from pyglet.graphics import OrderedGroup
 from .blocks import *
 from .utilities import *
 from .graphics import BlockGroup
-from .genworld import *
+from .genworld import WorldGenerator
+
 
 class AudioEngine:
     """A high level audio engine for easily playing SFX and Music."""
@@ -225,7 +226,7 @@ class GameScene(Scene):
 
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
-        self.position = (0, 0, 0)
+        self.position = (utilities.SECTOR_SIZE // 2, 0, utilities.SECTOR_SIZE // 2)
 
         # First element is rotation of the player in the x-z plane (ground
         # plane) measured from the z-axis down. The second is the rotation
@@ -237,6 +238,12 @@ class GameScene(Scene):
 
         # Which sector the player is currently in.
         self.sector = None
+
+        self.received_sectors = []
+        # Channel for data received from the the world generator
+
+        # True if the location of the camera have changed between an update
+        self.frustum_updated = False
 
         # Velocity in the y (upward) direction.
         self.dy = 0
@@ -355,6 +362,10 @@ class GameScene(Scene):
             The change in time since the last call.
 
         """
+        if self.received_sectors:
+            chunk = self.received_sectors.pop(0)
+            self.model.feed_chunk(chunk)
+
         if not self.initialized:
             self.set_exclusive_mouse(True)
 
@@ -364,21 +375,50 @@ class GameScene(Scene):
                 has_save = self.scene_manager.save.load_world(self.model)
 
             if not has_save:
-                generate_world(self.model)
+                generator = WorldGenerator(self.model)
+                generator.set_callback(self.on_sector_received)
+                generator.hills_enabled = HILLS_ON
+                self.model.generator = generator
+
+                # Make sure the sector containing the actor is loaded
+                sector = sectorize(self.position)
+                chunk = generator.generate(sector)
+                self.model.feed_chunk(chunk)
+
+                # Move the actor above the terrain
+                while not self.model.empty(self.position):
+                    x, y, z = self.position
+                    position = x, y + 1, z
+                    if self.position != position:
+                        self.position = position
+                        self.frustum_updated = True
+
 
             self.initialized = True
 
         self.model.process_queue()
-        sector = sectorize(self.position)
-        if sector != self.sector:
-            self.model.change_sectors(self.sector, sector)
-            # if self.sector is None:
-            #     self.model.process_entire_queue()
+
+        if self.frustum_updated:
+            sector = sectorize(self.position)
+            self.update_shown_sectors(self.position, self.rotation)
             self.sector = sector
+            self.frustum_updated = False
+
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
             self._update(dt / m)
+
+    def on_sector_received(self, chunk):
+        """Called when a part of the world is returned.
+
+        This is not executed by the main thread. So the result have to be passed
+        to the main thread.
+        """
+        self.received_sectors.append(chunk)
+        # Reduce the load of the main thread by delaying the
+        # computation between 2 chunks
+        time.sleep(0.1)
 
     def _update(self, dt):
         """ Private implementation of the `update()` method. This is where most
@@ -409,7 +449,10 @@ class GameScene(Scene):
         x, y, z = self.collide((x + dx, y + dy, z + dz), PLAYER_HEIGHT)
         # fix bug for jumping outside the wall and falling to infinity.
         y = max(-1.25, y)
-        self.position = (x, y, z)
+        position = (x, y, z)
+        if self.position != position:
+            self.position = position
+            self.frustum_updated = True
 
     def collide(self, position, height):
         """ Checks to see if the player at the given `position` and `height`
@@ -456,6 +499,38 @@ class GameScene(Scene):
                         self.dy = 0
                     break
         return tuple(p)
+
+    def update_shown_sectors(self, position, rotation):
+        """Update shown sectors according to the actual frustum.
+
+        A sector is a contiguous x, y sub-region of world. Sectors are
+        used to speed up world rendering.
+        """
+        sector = sectorize(position)
+        if self.sector == sector:
+            # The following computation is based on the actual sector
+            # So if there is no changes on the sector, it have to display
+            # The exact same thing
+            return
+
+        sectors_to_show = []
+        pad = 4
+        for dx in range(-pad, pad + 1):
+            for dy in [0]:  # range(-pad, pad + 1):
+                for dz in range(-pad, pad + 1):
+                    # Manathan distance
+                    dist = abs(dx) + abs(dz)
+                    if dist > pad + 2:
+                        # Skip sectors outside of the sphere of radius pad+1
+                        continue
+                    x, y, z = sector
+                    sectors_to_show.append((dist, x + dx, y + dy, z + dz))
+
+        # Sort by distance to the player in order to
+        # displayed closest sectors first
+        sectors_to_show = sorted(sectors_to_show)
+        sectors_to_show = [s[1:] for s in sectors_to_show]
+        self.model.show_only_sectors(sectors_to_show)
 
     def on_mouse_press(self, x, y, button, modifiers):
         """Event handler for the Window.on_mouse_press event.
@@ -509,7 +584,10 @@ class GameScene(Scene):
             x, y = self.rotation
             x, y = x + dx * LOOK_SPEED_X, y + dy * LOOK_SPEED_Y
             y = max(-90, min(90, y))
-            self.rotation = (x, y)
+            rotation = (x, y)
+            if self.rotation != rotation:
+                self.rotation = rotation
+                self.frustum_updated = True
 
     def on_key_press(self, symbol, modifiers):
         """Event handler for the Window.on_key_press event.
@@ -664,6 +742,9 @@ class Model(object):
         # This defines all the blocks that are currently in the world.
         self.world = {}
 
+        # Procedural generator
+        self.generator = None
+
         # Same mapping as `world` but only contains blocks that are shown.
         self.shown = {}
 
@@ -672,6 +753,9 @@ class Model(object):
 
         # Mapping from sector to a list of positions inside that sector.
         self.sectors = {}
+
+        # Actual set of shown sectors
+        self.shown_sectors = set({})
 
         #self.generate_world = generate_world(self) 
         
@@ -709,6 +793,11 @@ class Model(object):
             previous = checked_position
             x, y, z = x + dx / m, y + dy / m, z + dz / m
         return None, None
+
+    def empty(self, position):
+        """ Returns True if given `position` does not contain block.
+        """
+        return not position in self.world
 
     def exposed(self, position):
         """ Returns False if given `position` is surrounded on all 6 sides by
@@ -840,13 +929,33 @@ class Model(object):
         """ Private implementation of the 'hide_block()` method.
 
         """
-        self._shown.pop(position).delete()
+        block = self._shown.pop(position, None)
+        if block:
+            block.delete()
+
+    def feed_chunk(self, chunk):
+        """Add a chunk of the world to the model.
+        """
+        shown = chunk.sector in self.shown_sectors
+        for position, block in chunk.blocks.items():
+            self.add_block(position, block, immediate=False)
+            if shown:
+                self.show_block(position, immediate=False)
 
     def show_sector(self, sector):
         """ Ensure all blocks in the given sector that should be shown are
         drawn to the canvas.
 
         """
+        self.shown_sectors.add(sector)
+
+        if sector not in self.sectors:
+            if self.generator is not None:
+                # This sector is about to be loaded
+                self.sectors[sector] = []
+                self.generator.request_sector(sector)
+                return
+
         for position in self.sectors.get(sector, []):
             if position not in self.shown and self.exposed(position):
                 self.show_block(position, False)
@@ -856,32 +965,22 @@ class Model(object):
         removed from the canvas.
 
         """
+        self.shown_sectors.discard(sector)
+
         for position in self.sectors.get(sector, []):
             if position in self.shown:
                 self.hide_block(position, False)
 
-    def change_sectors(self, before, after):
-        """ Move from sector `before` to sector `after`. A sector is a
-        contiguous x, y sub-region of world. Sectors are used to speed up
-        world rendering.
+    def show_only_sectors(self, sectors):
+        """ Update the shown sectors.
 
+        Show the ones which are not part of the list, and hide the others.
         """
-        before_set = set()
-        after_set = set()
-        pad = 4
-        for dx in range(-pad, pad + 1):
-            for dy in [0]:  # range(-pad, pad + 1):
-                for dz in range(-pad, pad + 1):
-                    if dx ** 2 + dy ** 2 + dz ** 2 > (pad + 1) ** 2:
-                        continue
-                    if before:
-                        x, y, z = before
-                        before_set.add((x + dx, y + dy, z + dz))
-                    if after:
-                        x, y, z = after
-                        after_set.add((x + dx, y + dy, z + dz))
-        show = after_set - before_set
+        after_set = set(sectors)
+        before_set = self.shown_sectors
         hide = before_set - after_set
+        # Use a list to respect the order of the sectors
+        show = [s for s in sectors if s not in before_set]
         for sector in show:
             self.show_sector(sector)
         for sector in hide:
