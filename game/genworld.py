@@ -33,11 +33,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import concurrent.futures
 import random
-import noise
 
 from .blocks import *
 from .utilities import *
 from game import utilities
+from libs import perlin
+
+
+noise = perlin.SimplexNoise()
 
 
 class Chunk:
@@ -98,6 +101,7 @@ class WorldGenerator:
         """Enclosure height, if generated"""
 
         self.lookup_terrain = []
+
         def add_terrain_map(height, terrains):
             """Add a new entry to the height map lookup table.
     
@@ -148,9 +152,11 @@ class WorldGenerator:
         """Compute the content of a sector asynchronously and return the result to a
         callback already specified to this generator.
         """
+
         def send_result(future):
             chunk = future.result()
             self.callback(chunk)
+
         future = self.executor.submit(self.generate, sector)
         future.add_done_callback(send_result)
 
@@ -202,7 +208,7 @@ class WorldGenerator:
 
     def _generate_floor(self, chunk):
         """Generate a standard floor at a specific height"""
-        y_pos= self.y - 2
+        y_pos = self.y - 2
         n = self.enclosure_size
         for x, z in self._iter_xz(chunk.sector):
             if self.enclosure:
@@ -213,20 +219,19 @@ class WorldGenerator:
     def _generate_random_map(self, chunk):
         n = self.enclosure_size
         y_pos = self.y - 2
-        octaves = 4
         freq = 38
         for x, z in self._iter_xz(chunk.sector):
             if self.enclosure:
                 if x <= -n or x >= n - 1 or z <= -n or z >= n - 1:
                     continue
-            c = noise.snoise2(x/freq, z/freq, octaves=octaves)
+            c = noise.noise2(x / freq, z / freq)
             c = int((c + 1) * 0.5 * len(self.lookup_terrain))
             if c < 0:
                 c = 0
             nb_block, terrains = self.lookup_terrain[c]
             for i in range(nb_block):
                 block = terrains[-1-i] if i < len(terrains) else terrains[0]
-                chunk[(x, y_pos+nb_block-i, z)] = block
+                chunk[(x, y_pos + nb_block - i, z)] = block
 
     def _generate_trees(self, chunk):
         """Generate trees in the map
@@ -234,6 +239,7 @@ class WorldGenerator:
         For now it do not generate trees between 2 sectors, and use rand
         instead of a procedural generation.
         """
+
         def get_biome(chunk, x, y, z):
             """Return the biome at a location of the map plus the first empty place."""
             # This loop could be removed using procedural height map
@@ -249,8 +255,8 @@ class WorldGenerator:
         y_pos = self.y - 2
 
         for _ in range(nb_trees):
-            x = sector[0] * utilities.SECTOR_SIZE + 3 + random.randint(0, utilities.SECTOR_SIZE-7)
-            z = sector[2] * utilities.SECTOR_SIZE + 3 + random.randint(0, utilities.SECTOR_SIZE-7)
+            x = sector[0] * utilities.SECTOR_SIZE + 3 + random.randint(0, utilities.SECTOR_SIZE - 7)
+            z = sector[2] * utilities.SECTOR_SIZE + 3 + random.randint(0, utilities.SECTOR_SIZE - 7)
             if self.enclosure:
                 if x < -n + 2 or x > n - 2 or z < -n + 2 or z > n - 2:
                     continue
@@ -353,9 +359,8 @@ class WorldGenerator:
         centered to 0.
         """
         y_pos = self.y + 20
-        octaves = 3
         freq = 20
         for x, z in self._iter_xz(chunk.sector):
-            c = noise.snoise2(x/freq, z/freq, octaves=octaves)
+            c = noise.noise2(x / freq, z / freq)
             if (c + 1) * 0.5 < self.cloudiness:
                 chunk[(x, y_pos, z)] = CLOUD

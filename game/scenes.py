@@ -226,7 +226,7 @@ class GameScene(Scene):
 
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
-        self.position = (utilities.SECTOR_SIZE // 2, 0, utilities.SECTOR_SIZE // 2)
+        self.position = (SECTOR_SIZE // 2, 0, SECTOR_SIZE // 2)
 
         # First element is rotation of the player in the x-z plane (ground
         # plane) measured from the z-axis down. The second is the rotation
